@@ -9,6 +9,20 @@
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <ControlTemplate x:Key="GlobalisHatterSablon">
+                <Grid BackgroundColor="Red">
+                    <Image Source="hatterkep.png" 
+                Aspect="AspectFill" 
+                HorizontalOptions="Fill" 
+                VerticalOptions="Fill" />
+                    <ContentPresenter />
+                </Grid>
+            </ControlTemplate>
+
+            <Style TargetType="ContentPage">
+                <Setter Property="ControlTemplate" Value="{StaticResource GlobalisHatterSablon}" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

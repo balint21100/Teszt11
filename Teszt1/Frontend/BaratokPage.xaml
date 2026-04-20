@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Teszt1.Frontend.BaratokPage"
+             xmlns:local="clr-namespace:Teszt1.Frontend"
+             x:DataType="local:BaratokPageViewModel"
+             Title="Barátaim"
+             BackgroundColor="Transparent">
+    <Grid>
+        <Image Source="hatterkep.png"
+           Aspect="AspectFill"
+           HorizontalOptions="FillAndExpand"
+           VerticalOptions="FillAndExpand"/>
+
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <Label Text="Barátaim" FontSize="26" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
+
+            <Frame BackgroundColor="#99000000" CornerRadius="10" Padding="10">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Megadás (pl. telefonszám, regisztrált email):" TextColor="White" />
+                    <Grid ColumnDefinitions="*, Auto" ColumnSpacing="10">
+                        <Entry Grid.Column="0" Text="{Binding UjBaratKereso}" Placeholder="Ide írd..." TextColor="White" BackgroundColor="#222" />
+                        <Button Grid.Column="1" Text="Keresés" Command="{Binding HozzaadasCommand}" BackgroundColor="#6200EE" TextColor="White" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <CollectionView ItemsSource="{Binding BaratokLista}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="local:Barat">
+                        <Frame BackgroundColor="#CC111111" BorderColor="DodgerBlue" CornerRadius="10" Padding="15" Margin="0,0,0,15">
+
+                            <Grid ColumnDefinitions="*, 80" ColumnSpacing="15">
+                                <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                    <Label Text="{Binding Nev}" FontSize="20" FontAttributes="Bold" TextColor="White" />
+                                    <Label Text="{Binding Cel, StringFormat='Cél: {0}'}" TextColor="LightGray" />
+                                    <Label Text="{Binding CelKaloria, StringFormat='Célkalória: {0} kcal'}" TextColor="LightGray" />
+                                    <Label Text="{Binding TeljesitettEtkezes, StringFormat='Teljesített étkezés: {0}'}" TextColor="LightGray" />
+                                    <Label Text="{Binding TervezettEdzes, StringFormat='Tervezett edzés: {0}'}" TextColor="LightGray" />
+                                    <Label Text="{Binding TeljesitetteMa, StringFormat='Teljesítette-e már ma: {0}'}" TextColor="LightGray" />
+                                    <Label Text="{Binding Uzenet, StringFormat='Üzenet: {0}'}" TextColor="DodgerBlue" FontAttributes="Italic" Margin="0,5,0,0" />
+                                </VerticalStackLayout>
+
+                                <Border Grid.Column="1" WidthRequest="70" HeightRequest="70" StrokeShape="RoundRectangle 35" VerticalOptions="Start" HorizontalOptions="End" Stroke="White">
+                                    <Image Source="dotnet_bot.png" Aspect="AspectFill" BackgroundColor="#444" />
+                                </Border>
+                            </Grid>
+
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

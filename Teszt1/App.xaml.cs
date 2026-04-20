@@ -6,8 +6,10 @@
         {
             InitializeComponent();
 
-            // Ez a sor kritikus a navigációhoz!
-            MainPage = new NavigationPage(new MainPage());
+        }
+        protected override Window CreateWindow(IActivationState? activationState)
+        {
+            return new Window(new AppShell());
         }
     }
 }

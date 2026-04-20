@@ -3,12 +3,26 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:Teszt1"
+    xmlns:local2="clr-namespace:Teszt1.Frontend"
     Shell.FlyoutBehavior="Flyout"
     Title="Teszt1">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    
+
+    <FlyoutItem Title="Étkezés">
+        <ShellContent ContentTemplate="{DataTemplate local2:MainPage}" Route="MainPage" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Edzésterv">
+        <ShellContent ContentTemplate="{DataTemplate local2:EdzesPage}" Route="EdzesPage" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="EÜ Adatok">
+        <ShellContent ContentTemplate="{DataTemplate local2:EuAdatokPage}" Route="EuAdatokPage" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Barátaim">
+        <ShellContent ContentTemplate="{DataTemplate local2:BaratokPage}" Route="BaratokPage" />
+    </FlyoutItem>
 
 </Shell>

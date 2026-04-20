@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Teszt1.Frontend.EtkezesHozzaadasaPage"
+             xmlns:local="clr-namespace:Teszt1.Frontend"
+             xmlns:local2="clr-namespace:Teszt1.Bakckend.Calsses"
+             x:DataType="local:EtkezesHozzaadasaPageViewModel"
+             Title="Étkezés hozzáadása"
+             BackgroundColor="Transparent">
+    <VerticalStackLayout Padding="20" Spacing="15">
+        <Label Text="Étkezés neve" TextColor="White" FontAttributes="Bold" />
+        <Entry Text="{Binding MealName}" Placeholder="pl. Reggeli" TextColor="White" BackgroundColor="#222" />
+
+        <Label Text="Étel keresése" TextColor="White" FontAttributes="Bold" />
+        <SearchBar Text="{Binding SearchText}" 
+               SearchCommand="{Binding SearchFoodsCommand}" 
+               Placeholder="Keresés..." 
+               TextColor="White" />
+
+        <ListView ItemsSource="{Binding SearchResults}" 
+              SelectedItem="{Binding SelectedFood}" 
+              BackgroundColor="#111" 
+              HeightRequest="250">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="local2:Food">
+                    <TextCell Text="{Binding Name}" 
+                          Detail="{Binding KcalDetail}" 
+                          TextColor="White" 
+                          DetailColor="Gray" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <Entry Text="{Binding Quantity}" Placeholder="Mennyiség (gramm)" Keyboard="Numeric" TextColor="White" />
+
+        <Button Text="Rögzítés" 
+            Command="{Binding SaveMealCommand}" 
+            BackgroundColor="#6200EE" 
+            CornerRadius="10" 
+            TextColor="White"/>
+    </VerticalStackLayout>
+</ContentPage>

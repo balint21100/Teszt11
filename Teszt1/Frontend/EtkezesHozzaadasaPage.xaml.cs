@@ -1,10 +1,12 @@
-namespace Teszt1.Frontend;
-
-public partial class EtkezesHozzaadasaPage : ContentPage
+namespace Teszt1.Frontend
 {
-	public EtkezesHozzaadasaPage(EtkezesHozzaadasaPageViewModel viewModel)
-	{
-		InitializeComponent();
-        BindingContext = viewModel;
+    public partial class EtkezesHozzaadasaPage : ContentPage
+    {
+        public EtkezesHozzaadasaPage(EtkezesHozzaadasaPageViewModel viewModel)
+        {
+            InitializeComponent();
+            BindingContext = viewModel;
+        }
     }
 }
+

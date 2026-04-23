@@ -1,28 +1,28 @@
-<Shell
+ï»¿<Shell
     x:Class="Teszt1.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:Teszt1"
-    xmlns:local2="clr-namespace:Teszt1.Frontend"
+    xmlns:frontend="clr-namespace:Teszt1.Frontend"
+    xmlns:root="clr-namespace:Teszt1"
     Shell.FlyoutBehavior="Flyout"
     Title="Teszt1">
 
-    
 
-    <FlyoutItem Title="Étkezés">
-        <ShellContent ContentTemplate="{DataTemplate local2:MainPage}" Route="MainPage" />
+    <FlyoutItem Title="Ã‰tkezÃ©s">
+        <!-- Itt a root:MainPage-et hasznÃ¡ljuk, mert a MainPage a Teszt1 nÃ©vtÃ©rben van -->
+        <ShellContent ContentTemplate="{DataTemplate root:MainPage}" Route="MainPage" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Edzésterv">
-        <ShellContent ContentTemplate="{DataTemplate local2:EdzesPage}" Route="EdzesPage" />
+    <FlyoutItem Title="EdzÃ©sterv">
+        <ShellContent ContentTemplate="{DataTemplate frontend:EdzesPage}" Route="EdzesPage" />
     </FlyoutItem>
 
-    <FlyoutItem Title="EÜ Adatok">
-        <ShellContent ContentTemplate="{DataTemplate local2:EuAdatokPage}" Route="EuAdatokPage" />
+    <FlyoutItem Title="EÃœ Adatok">
+        <ShellContent ContentTemplate="{DataTemplate frontend:EuAdatokPage}" Route="EuAdatokPage" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Barátaim">
-        <ShellContent ContentTemplate="{DataTemplate local2:BaratokPage}" Route="BaratokPage" />
+    <FlyoutItem Title="BarÃ¡taim">
+        <ShellContent ContentTemplate="{DataTemplate frontend:BaratokPage}" Route="BaratokPage" />
     </FlyoutItem>
 
 </Shell>

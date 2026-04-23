@@ -40,11 +40,11 @@
                 </VerticalStackLayout>
 
                 <Button Text="Étkezés hozzáadása" 
-                Command="{Binding GoToEtkezesCommand}"
-                BackgroundColor="#6200EE" 
-                TextColor="White" 
-                CornerRadius="20"
-                HeightRequest="55" />
+    Command="{Binding GoToEtkezesCommand}"
+    BackgroundColor="#6200EE" 
+    TextColor="White" 
+    CornerRadius="20"
+    HeightRequest="55" />
 
                 <Label Text="Utolsó 3 étkezés:" FontSize="18" FontAttributes="Bold" TextColor="White" />
 

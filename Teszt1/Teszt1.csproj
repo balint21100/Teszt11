@@ -71,9 +71,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="EtkezesHozzaadasaPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	  <MauiXaml Update="Frontend\BaratokPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

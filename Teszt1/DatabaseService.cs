@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using Teszt1.Bakckend.Calsses;
+using Teszt1.Frontend;
 
 namespace Teszt1
 {
@@ -62,28 +63,30 @@ namespace Teszt1
             return foods;
         }
 
-        //public void AddMealWithFood(int userId, string mealName, int foodId, float quantity)
-        //{
-        //    using (var conn = new MySqlConnection(connectionString))
-        //    {
-        //        conn.Open();
-        //        // 1. Étkezés elnevezése (Reggeli, Ebéd stb.)
-        //        string mealSql = "INSERT INTO dim_meal (user_id, date, name) VALUES (@uid, CURDATE(), @name)";
-        //        var cmd1 = new MySqlConnector.MySqlCommand(conn, mealSql);
-        //        cmd1.Parameters.AddWithValue("@uid", userId);
-        //        cmd1.Parameters.AddWithValue("@name", mealName);
-        //        cmd1.ExecuteNonQuery();
-        //        long mid = cmd1.LastInsertedId;
+        public void AddMealWithFood(int userId, string mealName, int foodId, float quantity)
+        {
+            using (var conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+                // 1. Étkezés elnevezése (Reggeli, Ebéd stb.)
+                string mealSql = "INSERT INTO dim_meal (user_id, date, name) VALUES (@uid, CURDATE(), @name)";
+                // FIGYELJ IDE: MySqlCommand kell ide!
+                var cmd1 = new MySqlCommand(mealSql, conn);
+                cmd1.Parameters.AddWithValue("@uid", userId);
+                cmd1.Parameters.AddWithValue("@name", mealName);
+                cmd1.ExecuteNonQuery();
+                long mid = cmd1.LastInsertedId;
 
-        //        // 2. Étel hozzárendelése
-        //        string entrySql = "INSERT INTO dim_mealentry (meal_id, food_id, qty) VALUES (@mid, @fid, @qty)";
-        //        var cmd2 = new MySqlConnector.MySqlCommand(entrySql, conn);
-        //        cmd2.Parameters.AddWithValue("@mid", mid);
-        //        cmd2.Parameters.AddWithValue("@fid", foodId);
-        //        cmd2.Parameters.AddWithValue("@qty", quantity);
-        //        cmd2.ExecuteNonQuery();
-        //    }
-        //}
+                // 2. Étel hozzárendelése
+                string entrySql = "INSERT INTO dim_mealentry (meal_id, food_id, qty) VALUES (@mid, @fid, @qty)";
+                // FIGYELJ IDE: Ide is MySqlCommand kell!
+                var cmd2 = new MySqlCommand(entrySql, conn);
+                cmd2.Parameters.AddWithValue("@mid", mid);
+                cmd2.Parameters.AddWithValue("@fid", foodId);
+                cmd2.Parameters.AddWithValue("@qty", quantity);
+                cmd2.ExecuteNonQuery();
+            }
+        }
 
         public List<string> GetLastThreeMeals(int userId)
         {
@@ -108,6 +111,66 @@ namespace Teszt1
                 }
             }
             return result;
+        }
+
+        public void AddWorkoutEntry(int workoutId, int exerciseId, int sets, int reps, float weight)
+        {
+            using (var conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+                string sql = "INSERT INTO dim_workoutentry (workout_id, exercise_id, sets, reps, weight) " +
+                             "VALUES (@wid, @eid, @sets, @reps, @weight)";
+                using (var cmd = new MySqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@wid", workoutId);
+                    cmd.Parameters.AddWithValue("@eid", exerciseId);
+                    cmd.Parameters.AddWithValue("@sets", sets);
+                    cmd.Parameters.AddWithValue("@reps", reps);
+                    cmd.Parameters.AddWithValue("@weight", weight);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public long CreateWorkout(int userId, string dayName, string workoutName)
+        {
+            using (var conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+                string sql = "INSERT INTO dim_workout (user_id, date, name) VALUES (@uid, CURDATE(), @name)";
+                using (var cmd = new MySqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@uid", userId);
+                    cmd.Parameters.AddWithValue("@name", $"{dayName} - {workoutName}");
+                    cmd.ExecuteNonQuery();
+                    return cmd.LastInsertedId;
+                }
+            }
+        }
+
+        public void SaveWorkoutPlan(int userId, string planName, List<WorkoutDay> days)
+        {
+            using (var conn = new MySqlConnection(connectionString))
+            {
+                conn.Open();
+
+                // Végigmegyünk azokon a napokon, amiket a felhasználó kitöltött
+                foreach (var day in days)
+                {
+                    // Minden kitöltött naphoz létrehozunk egy bejegyzést a dim_workout táblába
+                    string sql = "INSERT INTO dim_workout (user_id, date, name) VALUES (@uid, CURDATE(), @name)";
+                    using (var cmd = new MySqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@uid", userId);
+
+                        // A 'name' mezőbe mentjük a sablon nevét, a napot, és a beírt tervet is!
+                        // Pl: "Tömegnövelő (Hétfő): Fekvenyomás 4x10"
+                        cmd.Parameters.AddWithValue("@name", $"{planName} ({day.DayName}): {day.PlannedExercise}");
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
         }
     }
 }

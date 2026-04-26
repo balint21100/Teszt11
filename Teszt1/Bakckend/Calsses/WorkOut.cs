@@ -16,5 +16,6 @@ namespace Teszt1.Bakckend.Calsses
 
         public virtual User User { get; set; }
         public virtual ICollection<WorkoutEntry> Entries { get; set; } = new HashSet<WorkoutEntry>();
+        public virtual ICollection<Exercise> Exercises { get; set; } = new HashSet<Exercise>();
     }
 }

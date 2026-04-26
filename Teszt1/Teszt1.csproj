@@ -71,21 +71,29 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Frontend\BaratokPage.xaml">
+	  <MauiXaml Update="Frontend\Baratok\BaratokPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Frontend\EdzesPage.xaml">
+	  <MauiXaml Update="Frontend\Edzes\EdzesPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Frontend\EdzesSzerkesztoPage.xaml">
+	  <MauiXaml Update="Frontend\Edzes\EdzesSzerkesztoPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Frontend\EtkezesHozzaadasaPage.xaml">
+	  <MauiXaml Update="Frontend\Edzes\UjEdzesPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Frontend\EuAdatokPage.xaml">
+	  <MauiXaml Update="Frontend\Etkezes\EtkezesHozzaadasaPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Frontend\EU adatok\EuAdatokPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Frontend\Badge-ek\" />
+	  <Folder Include="Frontend\Statisztika\" />
 	</ItemGroup>
 
 </Project>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Teszt1.Frontend.Edzes"
+             x:Class="Teszt1.Frontend.Edzes.UjEdzesPage"
+             Title="Edzés létrehozása"
+             BackgroundColor="Transparent">
+
+    <ContentPage.BindingContext>
+        <local:UjEdzesPageViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid>
+        <Image Source="hatterkep.png" Aspect="AspectFill" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>
+
+        <Grid RowDefinitions="*, Auto" Padding="20">
+            <ScrollView Grid.Row="0">
+                <Frame BackgroundColor="#B0000000" CornerRadius="20" Padding="20" BorderColor="Gray">
+                    <VerticalStackLayout Spacing="20">
+                        <Label Text="Új edzés" FontSize="28" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"/>
+
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="Edzés megnevezése (pl. Mell-Bicepsz)" TextColor="Gray"/>
+                            <Entry Text="{Binding EdzesNeve}" Placeholder="Írd be az edzés nevét..." TextColor="White" PlaceholderColor="DimGray"/>
+                        </VerticalStackLayout>
+
+                        <BoxView HeightRequest="1" Color="Gray" Margin="0,10"/>
+
+                        <Label Text="Gyakorlatok felvétele" FontSize="18" FontAttributes="Bold" TextColor="White"/>
+
+                        <Grid ColumnDefinitions="*, 60, 60" ColumnSpacing="10">
+                            <Entry Text="{Binding UjGyakorlatNeve}" Placeholder="Gyakorlat..." TextColor="White" Grid.Column="0"/>
+                            <Entry Text="{Binding UjSorozat}" Placeholder="Sor." Keyboard="Numeric" TextColor="White" Grid.Column="1"/>
+                            <Entry Text="{Binding UjIsmetles}" Placeholder="Ism." Keyboard="Numeric" TextColor="White" Grid.Column="2"/>
+                        </Grid>
+
+                        <Button Command="{Binding GyakorlatHozzaadasaCommand}"
+                                Text="Gyakorlat hozzáadása a listához" 
+                                BackgroundColor="Transparent" 
+                                BorderColor="#6200EE" 
+                                BorderWidth="2" 
+                                TextColor="White" 
+                                CornerRadius="15"/>
+
+                        <Label Text="A listában szereplő gyakorlatok:" TextColor="Gray" Margin="0,10,0,0"/>
+
+                        <CollectionView ItemsSource="{Binding FelvettGyakorlatok}" HeightRequest="200">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <Label Text="{Binding .}" TextColor="LightGray" FontSize="16" Margin="0,5"/>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+                    </VerticalStackLayout>
+                </Frame>
+            </ScrollView>
+
+            <Button Grid.Row="1" 
+                    Command="{Binding EdzesMentesCommand}"
+                    Text="Edzés mentése" 
+                    BackgroundColor="#6200EE" 
+                    TextColor="White" 
+                    CornerRadius="25" 
+                    HeightRequest="55" 
+                    FontAttributes="Bold"
+                    Margin="0,15,0,0"/>
+        </Grid>
+    </Grid>
+</ContentPage>

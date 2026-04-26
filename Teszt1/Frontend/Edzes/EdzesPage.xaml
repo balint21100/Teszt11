@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Teszt1.Frontend.EdzesPage"
+             Title="Edzés"
+             BackgroundColor="Transparent">
+
+    <Grid>
+        <Image Source="hatterkep.png"
+               Aspect="AspectFill"
+               HorizontalOptions="FillAndExpand"
+               VerticalOptions="FillAndExpand"/>
+
+        <Grid RowDefinitions="*" Padding="20">
+
+            <ScrollView Grid.Row="0" Margin="0,0,0,10">
+
+                <Frame BackgroundColor="#B0000000" CornerRadius="20" Padding="20" BorderColor="Gray">
+                    <VerticalStackLayout Spacing="10">
+
+                        <VerticalStackLayout Spacing="5" Margin="0,0,0,15">
+                            <Label Text="Heti edzésterv" 
+                                   FontSize="32" 
+                                   FontAttributes="Bold" 
+                                   TextColor="White" 
+                                   HorizontalOptions="Center" />
+
+                            <Label Text="{Binding AktualisHet}" 
+                                   FontSize="15" 
+                                   TextColor="White" 
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center"
+                                   TextTransform="Lowercase"/>
+                        </VerticalStackLayout>
+
+                        <Grid ColumnDefinitions="90, *, 45" ColumnSpacing="10" VerticalOptions="Center" Padding="0,5">
+                            <Label Grid.Column="0" Text="Hétfő" TextColor="White" FontAttributes="Bold" FontSize="18" VerticalOptions="Center"/>
+                            <Picker Grid.Column="1" Title="Válassz edzést..." TitleColor="LightGray" TextColor="White" VerticalOptions="Center">
+                                <Picker.Items>
+                                    <x:String>Mell-Bicepsz</x:String>
+                                    <x:String>Hát-Tricepsz</x:String>
+                                    <x:String>+ Új edzés hozzáadása</x:String>
+                                </Picker.Items>
+                            </Picker>
+                            <Button Grid.Column="2" Text="⚙️" BackgroundColor="#6200EE" TextColor="White" CornerRadius="10" Padding="0" HeightRequest="45" VerticalOptions="Center"/>
+                        </Grid>
+                        <BoxView HeightRequest="1" Color="#40FFFFFF" Margin="0,5"/>
+
+                        <Grid ColumnDefinitions="90, *, 45" ColumnSpacing="10" VerticalOptions="Center" Padding="0,5">
+                            <Label Grid.Column="0" Text="Kedd" TextColor="White" FontAttributes="Bold" FontSize="18" VerticalOptions="Center"/>
+                            <Picker Grid.Column="1" Title="Válassz edzést..." TitleColor="LightGray" TextColor="White" VerticalOptions="Center">
+                                <Picker.Items>
+                                    <x:String>Láb-Váll</x:String>
+                                    <x:String>+ Új edzés hozzáadása</x:String>
+                                </Picker.Items>
+                            </Picker>
+                            <Button Grid.Column="2" Text="⚙️" BackgroundColor="#6200EE" TextColor="White" CornerRadius="10" Padding="0" HeightRequest="45" VerticalOptions="Center"/>
+                        </Grid>
+                        <BoxView HeightRequest="1" Color="#40FFFFFF" Margin="0,5"/>
+
+                        <Grid ColumnDefinitions="90, *, 45" ColumnSpacing="10" VerticalOptions="Center" Padding="0,5">
+                            <Label Grid.Column="0" Text="Szerda" TextColor="White" FontAttributes="Bold" FontSize="18" VerticalOptions="Center"/>
+                            <Picker Grid.Column="1" Title="Válassz edzést..." TitleColor="LightGray" TextColor="White" VerticalOptions="Center">
+                                <Picker.Items>
+                                    <x:String>Pihenőnap</x:String>
+                                    <x:String>+ Új edzés hozzáadása</x:String>
+                                </Picker.Items>
+                            </Picker>
+                            <Button Grid.Column="2" Text="⚙️" BackgroundColor="#6200EE" TextColor="White" CornerRadius="10" Padding="0" HeightRequest="45" VerticalOptions="Center"/>
+                        </Grid>
+                        <BoxView HeightRequest="1" Color="#40FFFFFF" Margin="0,5"/>
+
+                        <Grid ColumnDefinitions="90, *, 45" ColumnSpacing="10" VerticalOptions="Center" Padding="0,5">
+                            <Label Grid.Column="0" Text="Csütörtök" TextColor="White" FontAttributes="Bold" FontSize="16" VerticalOptions="Center"/>
+                            <Picker Grid.Column="1" Title="Válassz edzést..." TitleColor="LightGray" TextColor="White" VerticalOptions="Center">
+                                <Picker.Items>
+                                    <x:String>+ Új edzés hozzáadása</x:String>
+                                </Picker.Items>
+                            </Picker>
+                            <Button Grid.Column="2" Text="⚙️" BackgroundColor="#6200EE" TextColor="White" CornerRadius="10" Padding="0" HeightRequest="45" VerticalOptions="Center"/>
+                        </Grid>
+                        <BoxView HeightRequest="1" Color="#40FFFFFF" Margin="0,5"/>
+
+                        <Grid ColumnDefinitions="90, *, 45" ColumnSpacing="10" VerticalOptions="Center" Padding="0,5">
+                            <Label Grid.Column="0" Text="Péntek" TextColor="White" FontAttributes="Bold" FontSize="18" VerticalOptions="Center"/>
+                            <Picker Grid.Column="1" Title="Válassz edzést..." TitleColor="LightGray" TextColor="White" VerticalOptions="Center">
+                                <Picker.Items>
+                                    <x:String>+ Új edzés hozzáadása</x:String>
+                                </Picker.Items>
+                            </Picker>
+                            <Button Grid.Column="2" Text="⚙️" BackgroundColor="#6200EE" TextColor="White" CornerRadius="10" Padding="0" HeightRequest="45" VerticalOptions="Center"/>
+                        </Grid>
+                        <BoxView HeightRequest="1" Color="#40FFFFFF" Margin="0,5"/>
+
+                        <Grid ColumnDefinitions="90, *, 45" ColumnSpacing="10" VerticalOptions="Center" Padding="0,5">
+                            <Label Grid.Column="0" Text="Szombat" TextColor="White" FontAttributes="Bold" FontSize="18" VerticalOptions="Center"/>
+                            <Picker Grid.Column="1" Title="Válassz edzést..." TitleColor="LightGray" TextColor="White" VerticalOptions="Center">
+                                <Picker.Items>
+                                    <x:String>+ Új edzés hozzáadása</x:String>
+                                </Picker.Items>
+                            </Picker>
+                            <Button Grid.Column="2" Text="⚙️" BackgroundColor="#6200EE" TextColor="White" CornerRadius="10" Padding="0" HeightRequest="45" VerticalOptions="Center"/>
+                        </Grid>
+                        <BoxView HeightRequest="1" Color="#40FFFFFF" Margin="0,5"/>
+
+                        <Frame BackgroundColor="#2A000000" CornerRadius="15" Padding="10" BorderColor="HotPink">
+                            <Grid ColumnDefinitions="80, *, 45" ColumnSpacing="10" VerticalOptions="Center">
+                                <Label Grid.Column="0" Text="Vasárnap" TextColor="HotPink" FontAttributes="Bold" FontSize="18" VerticalOptions="Center"/>
+                                <Picker Grid.Column="1" Title="Válassz edzést..." TitleColor="LightGray" TextColor="White" VerticalOptions="Center">
+                                    <Picker.Items>
+                                        <x:String>+ Új edzés hozzáadása</x:String>
+                                    </Picker.Items>
+                                </Picker>
+                                <Button Grid.Column="2" Text="⚙️" BackgroundColor="#6200EE" TextColor="White" CornerRadius="10" Padding="0" HeightRequest="45" VerticalOptions="Center"/>
+                            </Grid>
+                        </Frame>
+
+                    </VerticalStackLayout>
+                </Frame>
+            </ScrollView>
+
+        </Grid>
+    </Grid>
+</ContentPage>

@@ -17,6 +17,24 @@ namespace Teszt1.Frontend
 
         public ObservableCollection<WorkoutDay> WeekDays { get; set; }
 
+        public string AktualisHet
+        {
+            get
+            {
+                DateTime date = DateTime.Now;
+                // Kiszámoljuk, mennyi napot kell visszamenni Hétfőig
+                int diff = (7 + (date.DayOfWeek - DayOfWeek.Monday)) % 7;
+                DateTime startOfWeek = date.AddDays(-1 * diff).Date;
+                DateTime endOfWeek = startOfWeek.AddDays(6);
+
+                var culture = new System.Globalization.CultureInfo("hu-HU");
+                // Formázzuk és kisbetűsítjük, ahogy kérted
+                return $"{startOfWeek.ToString("yyyy. MMMM dd.", culture)} - {endOfWeek.ToString("yyyy. MMMM dd.", culture)}".ToLower();
+            }
+        }
+
+        public string MaiNapNeve => DateTime.Now.ToString("dddd", new System.Globalization.CultureInfo("hu-HU")).ToLower();
+
         public EdzesPageViewModel(DatabaseService databaseService)
         {
             _databaseService = databaseService;

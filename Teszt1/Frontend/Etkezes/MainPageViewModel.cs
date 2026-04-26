@@ -27,6 +27,9 @@ namespace Teszt1.Frontend
         [ObservableProperty] private double fatProgress;
         [ObservableProperty] private string? fatText;
 
+        // Így biztosan magyarul írja ki a hónapot és a napot, a megfelelő formátumban!
+        public string MaiDatum => DateTime.Now.ToString("yyyy. MMMM dd. (dddd)", new System.Globalization.CultureInfo("hu-HU"));
+
         // Lista az utolsó étkezéseknek
         public ObservableCollection<string> RecentMeals { get; set; } = new ObservableCollection<string>();
 

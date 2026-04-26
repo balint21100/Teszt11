@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Teszt1.Frontend"
+             x:Class="Teszt1.MainPage"
+             x:DataType="local:MainPageViewModel"
+             BackgroundColor="Transparent"
+             Title="Home">
+
+    <Grid>
+        <Image Source="hatterkep.png"
+               Aspect="AspectFill"
+               HorizontalOptions="FillAndExpand"
+               VerticalOptions="FillAndExpand"/>
+
+        <Grid RowDefinitions="*, Auto" Padding="20">
+
+            <ScrollView Grid.Row="0" Margin="0,0,0,15">
+
+                <Frame BackgroundColor="#B0000000" CornerRadius="20" Padding="20" BorderColor="Gray">
+                    <VerticalStackLayout Spacing="20">
+
+                        <VerticalStackLayout Spacing="5" Margin="0,0,0,10">
+                            <Label Text="Napi étkezések" 
+                                   FontSize="32" 
+                                   FontAttributes="Bold" 
+                                   TextColor="White" 
+                                   HorizontalOptions="Center" />
+
+                            <Label Text="{Binding MaiDatum}" 
+                                   FontSize="15" 
+                                   TextColor="White" 
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center"
+                                   TextTransform="Lowercase"/>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="{Binding CalorieText}" FontAttributes="Bold" FontSize="18" TextColor="White" />
+                            <ProgressBar Progress="{Binding CalorieProgress}" ProgressColor="DodgerBlue" HeightRequest="12" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="15">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="{Binding CarbsText}" FontSize="12" TextColor="White" />
+                                <ProgressBar Progress="{Binding CarbsProgress}" ProgressColor="Red" HeightRequest="8" />
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="{Binding ProteinText}" FontSize="12" TextColor="White" />
+                                <ProgressBar Progress="{Binding ProteinProgress}" ProgressColor="Green" HeightRequest="8" />
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="{Binding FatText}" FontSize="12" TextColor="White" />
+                                <ProgressBar Progress="{Binding FatProgress}" ProgressColor="Orange" HeightRequest="8" />
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+
+                        <Label Text="Utolsó 3 étkezés:" FontSize="18" FontAttributes="Bold" TextColor="White" Margin="0,10,0,0" />
+                        <CollectionView ItemsSource="{Binding RecentMeals}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <Label Text="{Binding .}" TextColor="LightGray" FontSize="15" Margin="0,5"/>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+                    </VerticalStackLayout>
+                </Frame>
+            </ScrollView>
+
+            <VerticalStackLayout Grid.Row="1" Spacing="10">
+
+                <Button Text="Étkezés hozzáadása" 
+                        Command="{Binding GoToEtkezesCommand}"
+                        BackgroundColor="#6200EE" 
+                        TextColor="White" 
+                        CornerRadius="25"
+                        HeightRequest="50"
+                        FontAttributes="Bold"/>
+
+                <Button Text="Mai étkezés mentése listába"
+                        BackgroundColor="#6200EE" 
+                        TextColor="White"
+                        CornerRadius="25"
+                        HeightRequest="50"
+                        FontAttributes="Bold" />
+
+            </VerticalStackLayout>
+
+        </Grid>
+    </Grid>
+</ContentPage>

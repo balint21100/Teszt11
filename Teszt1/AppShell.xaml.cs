@@ -12,6 +12,7 @@ namespace Teszt1
             Routing.RegisterRoute(nameof(EdzesPage), typeof(EdzesPage));
             Routing.RegisterRoute(nameof(EuAdatokPage), typeof(EuAdatokPage));
             Routing.RegisterRoute(nameof(UjEdzesPage), typeof(UjEdzesPage));
+            Routing.RegisterRoute(nameof(EdzesSzerkesztesPage), typeof(EdzesSzerkesztesPage));
         }
     }
 }

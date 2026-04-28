@@ -6,52 +6,54 @@
              x:DataType="local:BaratokPageViewModel"
              Title="Barátaim"
              BackgroundColor="Transparent">
+
     <Grid>
-        <Image Source="hatterkep.png"
-           Aspect="AspectFill"
-           HorizontalOptions="FillAndExpand"
-           VerticalOptions="FillAndExpand"/>
+        <Image Source="hatterkep.png" Aspect="AspectFill" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>
 
-        <VerticalStackLayout Padding="20" Spacing="20">
+        <Grid Padding="20">
+            <Border BackgroundColor="#B0000000" Stroke="Gray" StrokeThickness="1" StrokeShape="RoundRectangle 20" Padding="20">
+                <Grid RowDefinitions="Auto, Auto, *">
 
-            <Label Text="Barátaim" FontSize="26" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
+                    <Label Grid.Row="0" Text="Barátaim" FontSize="28" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" Margin="0,0,0,15" />
 
-            <Frame BackgroundColor="#99000000" CornerRadius="10" Padding="10">
-                <VerticalStackLayout Spacing="10">
-                    <Label Text="Megadás (pl. telefonszám, regisztrált email):" TextColor="White" />
-                    <Grid ColumnDefinitions="*, Auto" ColumnSpacing="10">
-                        <Entry Grid.Column="0" Text="{Binding UjBaratKereso}" Placeholder="Ide írd..." TextColor="White" BackgroundColor="#222" />
-                        <Button Grid.Column="1" Text="Keresés" Command="{Binding HozzaadasCommand}" BackgroundColor="#6200EE" TextColor="White" />
-                    </Grid>
-                </VerticalStackLayout>
-            </Frame>
-
-            <CollectionView ItemsSource="{Binding BaratokLista}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="local:Barat">
-                        <Frame BackgroundColor="#CC111111" BorderColor="DodgerBlue" CornerRadius="10" Padding="15" Margin="0,0,0,15">
-
-                            <Grid ColumnDefinitions="*, 80" ColumnSpacing="15">
-                                <VerticalStackLayout Grid.Column="0" Spacing="2">
-                                    <Label Text="{Binding Nev}" FontSize="20" FontAttributes="Bold" TextColor="White" />
-                                    <Label Text="{Binding Cel, StringFormat='Cél: {0}'}" TextColor="LightGray" />
-                                    <Label Text="{Binding CelKaloria, StringFormat='Célkalória: {0} kcal'}" TextColor="LightGray" />
-                                    <Label Text="{Binding TeljesitettEtkezes, StringFormat='Teljesített étkezés: {0}'}" TextColor="LightGray" />
-                                    <Label Text="{Binding TervezettEdzes, StringFormat='Tervezett edzés: {0}'}" TextColor="LightGray" />
-                                    <Label Text="{Binding TeljesitetteMa, StringFormat='Teljesítette-e már ma: {0}'}" TextColor="LightGray" />
-                                    <Label Text="{Binding Uzenet, StringFormat='Üzenet: {0}'}" TextColor="DodgerBlue" FontAttributes="Italic" Margin="0,5,0,0" />
-                                </VerticalStackLayout>
-
-                                <Border Grid.Column="1" WidthRequest="70" HeightRequest="70" StrokeShape="RoundRectangle 35" VerticalOptions="Start" HorizontalOptions="End" Stroke="White">
-                                    <Image Source="dotnet_bot.png" Aspect="AspectFill" BackgroundColor="#444" />
-                                </Border>
+                    <Frame Grid.Row="1" BackgroundColor="#20FFFFFF" CornerRadius="15" Padding="15" BorderColor="Transparent" HasShadow="False" Margin="0,0,0,15">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="Megadás (pl. telefonszám, regisztrált email):" TextColor="LightGray" />
+                            <Grid ColumnDefinitions="*, Auto" ColumnSpacing="10">
+                                <Entry Grid.Column="0" Text="{Binding UjBaratKereso}" Placeholder="Ide írd..." TextColor="White" BackgroundColor="Transparent" />
+                                <Button Grid.Column="1" Text="Keresés" Command="{Binding HozzaadasCommand}" BackgroundColor="#6200EE" TextColor="White" CornerRadius="12" FontAttributes="Bold" />
                             </Grid>
+                        </VerticalStackLayout>
+                    </Frame>
 
-                        </Frame>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                    <CollectionView Grid.Row="2" ItemsSource="{Binding BaratokLista}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="local:Barat">
+                                <Frame BackgroundColor="#20FFFFFF" BorderColor="Transparent" CornerRadius="15" Padding="15" HasShadow="False" Margin="0,0,0,10">
+                                    <Grid ColumnDefinitions="*, 80" ColumnSpacing="15">
 
-        </VerticalStackLayout>
+                                        <VerticalStackLayout Grid.Column="0" Spacing="4">
+                                            <Label Text="{Binding Nev}" FontSize="20" FontAttributes="Bold" TextColor="White" />
+                                            <Label Text="{Binding Cel, StringFormat='Cél: {0}'}" TextColor="LightGray" FontSize="13"/>
+                                            <Label Text="{Binding CelKaloria, StringFormat='Célkalória: {0} kcal'}" TextColor="LightGray" FontSize="13"/>
+                                            <Label Text="{Binding TeljesitettEtkezes, StringFormat='Teljesített étkezés: {0}'}" TextColor="LightGray" FontSize="13"/>
+                                            <Label Text="{Binding TervezettEdzes, StringFormat='Tervezett edzés: {0}'}" TextColor="LightGray" FontSize="13"/>
+                                            <Label Text="{Binding TeljesitetteMa, StringFormat='Teljesítette-e már ma: {0}'}" TextColor="LightGray" FontSize="13"/>
+                                            <Label Text="{Binding Uzenet, StringFormat='Üzenet: {0}'}" TextColor="#00E676" FontAttributes="Italic" Margin="0,5,0,0" FontSize="13"/>
+                                        </VerticalStackLayout>
+
+                                        <Border Grid.Column="1" WidthRequest="70" HeightRequest="70" StrokeShape="RoundRectangle 35" VerticalOptions="Start" HorizontalOptions="End" Stroke="#6200EE" StrokeThickness="2">
+                                            <Image Source="dotnet_bot.png" Aspect="AspectFill" BackgroundColor="#444" />
+                                        </Border>
+
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                </Grid>
+            </Border>
+        </Grid>
     </Grid>
 </ContentPage>

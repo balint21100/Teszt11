@@ -16,38 +16,82 @@
         <Grid RowDefinitions="*, Auto" Padding="20">
             <ScrollView Grid.Row="0">
                 <Frame BackgroundColor="#B0000000" CornerRadius="20" Padding="20" BorderColor="Gray">
-                    <VerticalStackLayout Spacing="20">
-                        <Label Text="Új edzés" FontSize="28" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"/>
+                    <VerticalStackLayout Spacing="15">
 
-                        <VerticalStackLayout Spacing="5">
-                            <Label Text="Edzés megnevezése (pl. Mell-Bicepsz)" TextColor="Gray"/>
-                            <Entry Text="{Binding EdzesNeve}" Placeholder="Írd be az edzés nevét..." TextColor="White" PlaceholderColor="DimGray"/>
-                        </VerticalStackLayout>
+                        <Label Text="Új edzés" FontSize="28" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" Margin="0,0,0,10"/>
 
-                        <BoxView HeightRequest="1" Color="Gray" Margin="0,10"/>
+                        <Grid ColumnDefinitions="*, *" ColumnSpacing="10" Margin="0,5">
+                            <Button Grid.Column="0" 
+                                    Text="Súlyemelés" 
+                                    Command="{Binding TabValtasCommand}" CommandParameter="Sulyemeles"
+                                    BackgroundColor="{Binding SulyemelesTabSzin}" 
+                                    TextColor="White" CornerRadius="10" FontAttributes="Bold"/>
 
-                        <Label Text="Gyakorlatok felvétele" FontSize="18" FontAttributes="Bold" TextColor="White"/>
-
-                        <Grid ColumnDefinitions="*, 60, 60" ColumnSpacing="10">
-                            <Entry Text="{Binding UjGyakorlatNeve}" Placeholder="Gyakorlat..." TextColor="White" Grid.Column="0"/>
-                            <Entry Text="{Binding UjSorozat}" Placeholder="Sor." Keyboard="Numeric" TextColor="White" Grid.Column="1"/>
-                            <Entry Text="{Binding UjIsmetles}" Placeholder="Ism." Keyboard="Numeric" TextColor="White" Grid.Column="2"/>
+                            <Button Grid.Column="1" 
+                                    Text="Egyéb Edzés" 
+                                    Command="{Binding TabValtasCommand}" CommandParameter="Egyeb"
+                                    BackgroundColor="{Binding EgyebTabSzin}" 
+                                    TextColor="White" CornerRadius="10" FontAttributes="Bold"/>
                         </Grid>
 
-                        <Button Command="{Binding GyakorlatHozzaadasaCommand}"
-                                Text="Gyakorlat hozzáadása a listához" 
-                                BackgroundColor="Transparent" 
-                                BorderColor="#6200EE" 
-                                BorderWidth="2" 
-                                TextColor="White" 
-                                CornerRadius="15"/>
+                        <BoxView HeightRequest="1" Color="#40FFFFFF" Margin="0,5"/>
 
-                        <Label Text="A listában szereplő gyakorlatok:" TextColor="Gray" Margin="0,10,0,0"/>
+                        <VerticalStackLayout Spacing="15" IsVisible="{Binding IsSulyemelesAktiv}">
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="Edzés megnevezése (pl. Mell-Bicepsz)" TextColor="Gray" FontSize="14"/>
+                                <Entry Text="{Binding EdzesNeve}" Placeholder="Írd be az edzés nevét..." TextColor="White" PlaceholderColor="DimGray"/>
+                            </VerticalStackLayout>
 
+                            <BoxView HeightRequest="1" Color="#20FFFFFF" />
+
+                            <Label Text="Súlyzós gyakorlat felvétele" FontSize="18" FontAttributes="Bold" TextColor="White"/>
+                            <Entry Text="{Binding SulyGyakorlatNeve}" Placeholder="Gyakorlat neve (pl. Fekvenyomás)" TextColor="White" PlaceholderColor="DimGray"/>
+
+                            <Grid ColumnDefinitions="*, *" ColumnSpacing="10">
+                                <VerticalStackLayout Grid.Column="0" Spacing="5">
+                                    <Label Text="Súly (kg)" TextColor="Gray" FontSize="12"/>
+                                    <Entry Text="{Binding Suly}" Keyboard="Numeric" Placeholder="0" TextColor="White" PlaceholderColor="DimGray"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1" Spacing="5">
+                                    <Label Text="Ismétlés" TextColor="Gray" FontSize="12"/>
+                                    <Entry Text="{Binding Ismetles}" Keyboard="Numeric" Placeholder="0" TextColor="White" PlaceholderColor="DimGray"/>
+                                </VerticalStackLayout>
+                            </Grid>
+
+                            <Entry Text="{Binding SulyMegjegyzes}" Placeholder="Megjegyzés (opcionális)" TextColor="White" PlaceholderColor="DimGray"/>
+
+                            <Button Command="{Binding SulyGyakorlatHozzaadasaCommand}"
+                                    Text="Szett hozzáadása a listához" 
+                                    BackgroundColor="Transparent" BorderColor="#6200EE" BorderWidth="2" TextColor="White" CornerRadius="15"/>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="15" IsVisible="{Binding IsEgyebAktiv}">
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="Edzés megnevezése (pl. Kardió nap)" TextColor="Gray" FontSize="14"/>
+                                <Entry Text="{Binding EdzesNeve}" Placeholder="Írd be az edzés nevét..." TextColor="White" PlaceholderColor="DimGray"/>
+                            </VerticalStackLayout>
+
+                            <BoxView HeightRequest="1" Color="#20FFFFFF" />
+
+                            <Label Text="Gyakorlat felvétele" FontSize="18" FontAttributes="Bold" TextColor="White"/>
+
+                            <Entry Text="{Binding EgyebTvekenysegNeve}" Placeholder="Gyakorlat/Sport (pl. Futás)" TextColor="White" PlaceholderColor="DimGray"/>
+                            <Entry Text="{Binding EgyebMegjegyzes}" Placeholder="Megjegyzés (pl. 5km, laza tempó)" TextColor="White" PlaceholderColor="DimGray"/>
+
+                            <Button Command="{Binding EgyebGyakorlatHozzaadasaCommand}"
+                                    Text="Gyakorlat hozzáadása a listához" 
+                                    BackgroundColor="Transparent" BorderColor="#6200EE" BorderWidth="2" TextColor="White" CornerRadius="15"/>
+                        </VerticalStackLayout>
+
+                        <BoxView HeightRequest="1" Color="#40FFFFFF" Margin="0,10"/>
+
+                        <Label Text="A listában szereplő gyakorlatok:" TextColor="Gray"/>
                         <CollectionView ItemsSource="{Binding FelvettGyakorlatok}" HeightRequest="200">
                             <CollectionView.ItemTemplate>
                                 <DataTemplate x:DataType="x:String">
-                                    <Label Text="{Binding .}" TextColor="LightGray" FontSize="16" Margin="0,5"/>
+                                    <Frame BackgroundColor="#20FFFFFF" CornerRadius="10" Padding="10" Margin="0,5" BorderColor="Transparent">
+                                        <Label Text="{Binding .}" TextColor="LightGray" FontSize="15"/>
+                                    </Frame>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
                         </CollectionView>

@@ -1,13 +1,12 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using Teszt1.Bakckend.Calsses;
 using Teszt1.Frontend;
 
 namespace Teszt1
 {
-    
-
     public class DatabaseService
     {
         private string connectionString = "Server=localhost;Database=FitTrck;Uid=root;Pwd=;Port=3306;";
@@ -171,6 +170,120 @@ namespace Teszt1
                     }
                 }
             }
+        }
+
+        // EZZEL TÖLTJÜK BE A FŐOLDALT INDULÁSKOR!
+        public async Task<List<string>> GetNapiEdzesekAsync(int felhasznaloId, string nap)
+        {
+            var eredmeny = new List<string>();
+            using (var conn = new MySqlConnection(connectionString))
+            {
+                await conn.OpenAsync();
+                string query = "SELECT Nev FROM edzesek WHERE FelhasznaloId = @Fid AND Nap = @Nap";
+                using (var cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Fid", felhasznaloId);
+                    cmd.Parameters.AddWithValue("@Nap", nap);
+                    using (var reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            eredmeny.Add(reader.GetString(0));
+                        }
+                    }
+                }
+            }
+            return eredmeny;
+        }
+
+        // JAVÍTOTT MENTÉS (Golyóálló ID lekérés!)
+        public async Task UjEdzesMenteseAsync(int felhasznaloId, string nap, string edzesNev, List<string> gyakorlatok)
+        {
+            using (var conn = new MySqlConnection(connectionString))
+            {
+                await conn.OpenAsync();
+
+                // 1. Lépés: Elmentjük az edzést, és AZONNAL kikérjük a pontos ID-t
+                string insertEdzesQuery = "INSERT INTO edzesek (FelhasznaloId, Nap, Nev) VALUES (@FelhasznaloId, @Nap, @Nev); SELECT LAST_INSERT_ID();";
+                long edzesId = 0;
+
+                using (var cmd = new MySqlCommand(insertEdzesQuery, conn))
+                {
+                    cmd.Parameters.AddWithValue("@FelhasznaloId", felhasznaloId);
+                    cmd.Parameters.AddWithValue("@Nap", nap);
+                    cmd.Parameters.AddWithValue("@Nev", edzesNev);
+
+                    // A Scalar garantáltan visszaadja az ID-t
+                    var result = await cmd.ExecuteScalarAsync();
+                    edzesId = Convert.ToInt64(result);
+                }
+
+                // 2. Lépés: Elmentjük a szetteket
+                if (edzesId > 0 && gyakorlatok != null && gyakorlatok.Count > 0)
+                {
+                    string insertGyakorlatQuery = "INSERT INTO edzes_gyakorlatok (EdzesId, GyakorlatSzoveg) VALUES (@EdzesId, @GyakorlatSzoveg);";
+
+                    foreach (var gyakorlat in gyakorlatok)
+                    {
+                        using (var cmd = new MySqlCommand(insertGyakorlatQuery, conn))
+                        {
+                            cmd.Parameters.AddWithValue("@EdzesId", edzesId);
+                            cmd.Parameters.AddWithValue("@GyakorlatSzoveg", gyakorlat);
+                            await cmd.ExecuteNonQueryAsync();
+                        }
+                    }
+                }
+            }
+        }
+
+        // 2. EDZÉS TÖRLÉSE (A Cascade miatt a szettek is törlődnek automatikusan!)
+        public async Task EdzesTorleseAsync(int felhasznaloId, string nap, string edzesNev)
+        {
+            using (var conn = new MySqlConnection(connectionString))
+            {
+                await conn.OpenAsync();
+                string deleteQuery = "DELETE FROM edzesek WHERE FelhasznaloId = @FelhasznaloId AND Nap = @Nap AND Nev = @Nev;";
+
+                using (var cmd = new MySqlCommand(deleteQuery, conn))
+                {
+                    cmd.Parameters.AddWithValue("@FelhasznaloId", felhasznaloId);
+                    cmd.Parameters.AddWithValue("@Nap", nap);
+                    cmd.Parameters.AddWithValue("@Nev", edzesNev);
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+        // 3. MEGLÉVŐ EDZÉS LEKÉRDEZÉSE (Ez kell a szerkesztő ablaknak!)
+        public async Task<List<string>> GetEdzesGyakorlatokAsync(int felhasznaloId, string nap, string edzesNev)
+        {
+            var eredmeny = new List<string>();
+            using (var conn = new MySqlConnection(connectionString))
+            {
+                await conn.OpenAsync();
+
+                string query = @"
+                    SELECT eg.GyakorlatSzoveg 
+                    FROM edzesek e
+                    JOIN edzes_gyakorlatok eg ON e.Id = eg.EdzesId
+                    WHERE e.FelhasznaloId = @Fid AND e.Nap = @Nap AND e.Nev = @Nev";
+
+                using (var cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Fid", felhasznaloId);
+                    cmd.Parameters.AddWithValue("@Nap", nap);
+                    cmd.Parameters.AddWithValue("@Nev", edzesNev);
+
+                    using (var reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            eredmeny.Add(reader.GetString("GyakorlatSzoveg"));
+                        }
+                    }
+                }
+            }
+            return eredmeny;
         }
     }
 }

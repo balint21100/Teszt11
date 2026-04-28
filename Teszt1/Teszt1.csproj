@@ -77,6 +77,9 @@
 	  <MauiXaml Update="Frontend\Edzes\EdzesPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Frontend\Edzes\EdzesSzerkesztesPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Frontend\Edzes\EdzesSzerkesztoPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -89,11 +92,13 @@
 	  <MauiXaml Update="Frontend\EU adatok\EuAdatokPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Frontend\Statisztika\StatisztikaPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	</ItemGroup>
 
 	<ItemGroup>
 	  <Folder Include="Frontend\Badge-ek\" />
-	  <Folder Include="Frontend\Statisztika\" />
 	</ItemGroup>
 
 </Project>

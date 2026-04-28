@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Teszt1.Frontend.Edzes"
+             x:Class="Teszt1.Frontend.Edzes.EdzesSzerkesztesPage"
+             Title="Edzés szerkesztése"
+             BackgroundColor="Transparent">
+
+    <ContentPage.BindingContext>
+        <local:EdzesSzerkesztesPageViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid>
+        <Image Source="hatterkep.png" Aspect="AspectFill" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>
+
+        <Grid RowDefinitions="*, Auto" Padding="20">
+            <ScrollView Grid.Row="0">
+                <Frame BackgroundColor="#B0000000" CornerRadius="20" Padding="20" BorderColor="Gray">
+                    <VerticalStackLayout Spacing="15">
+
+                        <Label Text="Szerkesztés" FontSize="26" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"/>
+
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="Edzés neve" TextColor="Gray" FontSize="14"/>
+                            <Entry Text="{Binding EdzesNev}" TextColor="White" />
+                        </VerticalStackLayout>
+
+                        <BoxView HeightRequest="1" Color="#40FFFFFF" />
+
+                        <VerticalStackLayout Spacing="15" IsVisible="{Binding IsSulyemelesAktiv}">
+                            <Label Text="Új szett hozzáadása" TextColor="White" FontAttributes="Bold"/>
+                            <Entry Text="{Binding SulyGyakorlatNeve}" Placeholder="Gyakorlat..." TextColor="White" />
+                            <Grid ColumnDefinitions="*, *">
+                                <Entry Grid.Column="0" Text="{Binding Suly}" Placeholder="Súly (kg)" Keyboard="Numeric" TextColor="White" />
+                                <Entry Grid.Column="1" Text="{Binding Ismetles}" Placeholder="Ismétlés" Keyboard="Numeric" TextColor="White" />
+                            </Grid>
+                            <Button Command="{Binding SulyGyakorlatHozzaadasaCommand}" Text="Szett hozzáadása" BackgroundColor="Transparent" BorderColor="#6200EE" BorderWidth="2" TextColor="White" CornerRadius="15"/>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="15" IsVisible="{Binding IsEgyebAktiv}">
+                            <Label Text="Gyakorlat felvétele" TextColor="White" FontAttributes="Bold"/>
+                            <Entry Text="{Binding EgyebTvekenysegNeve}" Placeholder="Gyakorlat..." TextColor="White" />
+                            <Entry Text="{Binding EgyebMegjegyzes}" Placeholder="Megjegyzés..." TextColor="White" />
+                            <Button Command="{Binding EgyebGyakorlatHozzaadasaCommand}" Text="Hozzáadás" BackgroundColor="Transparent" BorderColor="#6200EE" BorderWidth="2" TextColor="White" CornerRadius="15"/>
+                        </VerticalStackLayout>
+
+                        <BoxView HeightRequest="1" Color="#40FFFFFF" />
+
+                        <Label Text="Gyakorlatok listája (húzd el a törléshez):" TextColor="Gray"/>
+
+                        <CollectionView ItemsSource="{Binding FelvettGyakorlatok}" HeightRequest="250">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <SwipeView>
+                                        <SwipeView.RightItems>
+                                            <SwipeItems>
+                                                <SwipeItem Text="Törlés" 
+                                                           BackgroundColor="Red"
+                                                           Command="{Binding Source={RelativeSource AncestorType={x:Type local:EdzesSzerkesztesPageViewModel}}, Path=TorolGyakorlatCommand}"
+                                                           CommandParameter="{Binding .}"/>
+                                            </SwipeItems>
+                                        </SwipeView.RightItems>
+                                        <Frame BackgroundColor="#20FFFFFF" CornerRadius="10" Padding="10" Margin="0,5">
+                                            <Grid ColumnDefinitions="*, Auto">
+                                                <Label Grid.Column="0" Text="{Binding .}" TextColor="LightGray" FontSize="15" VerticalOptions="Center"/>
+                                                <Label Grid.Column="1" Text="⬅️" TextColor="Gray" FontSize="12" VerticalOptions="Center"/>
+                                            </Grid>
+                                        </Frame>
+                                    </SwipeView>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+                    </VerticalStackLayout>
+                </Frame>
+            </ScrollView>
+
+            <VerticalStackLayout Grid.Row="1" Spacing="10" Margin="0,15,0,0">
+                <Button Command="{Binding EdzesMentesCommand}" Text="Módosítások mentése" BackgroundColor="#6200EE" TextColor="White" CornerRadius="25" HeightRequest="50" FontAttributes="Bold"/>
+                <Button Command="{Binding EdzesTorleseCommand}" Text="Törlés" BackgroundColor="Transparent" BorderColor="Red" BorderWidth="2" TextColor="Red" CornerRadius="25" HeightRequest="50" FontAttributes="Bold"/>
+            </VerticalStackLayout>
+        </Grid>
+    </Grid>
+</ContentPage>

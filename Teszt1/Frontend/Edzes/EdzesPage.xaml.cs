@@ -1,12 +1,58 @@
-namespace Teszt1.Frontend
+using System;
+using Microsoft.Maui.Controls;
+
+namespace Teszt1.Frontend.Edzes;
+
+public partial class EdzesPage : ContentPage
 {
-    public partial class EdzesPage : ContentPage
+    public EdzesPage()
     {
-        public EdzesPage(EdzesPageViewModel viewModel)
+        InitializeComponent();
+    }
+
+    private async void OnEdzesKivalasztva(object sender, EventArgs e)
+    {
+        var picker = (Picker)sender;
+        if (picker.SelectedItem != null && picker.SelectedItem.ToString() == "+ Új edzés hozzáadása")
         {
-            InitializeComponent();
-            BindingContext = viewModel; // Összekötjük a dizájnt a logikával!
+            string nap = picker.ClassId;
+            MainThread.BeginInvokeOnMainThread(() => picker.SelectedIndex = -1);
+
+            try
+            {
+                await Shell.Current.GoToAsync($"{nameof(UjEdzesPage)}?Nap={nap}");
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Hiba", $"Navigációs hiba: {ex.Message}", "OK");
+            }
+        }
+    }
+
+    private async void OnSzerkesztesKattintva(object sender, EventArgs e)
+    {
+        var gomb = (Button)sender;
+        // Megkeressük a gomb melletti Pickert, hogy tudjuk, melyik edzés van kiválasztva
+        var grid = (Grid)gomb.Parent;
+        var picker = (Picker)grid.Children[1];
+
+        if (picker.SelectedItem == null || picker.SelectedItem.ToString() == "+ Új edzés hozzáadása")
+        {
+            await DisplayAlert("Figyelem", "Elõbb válassz ki egy szerkeszthetõ edzést!", "OK");
+            return;
+        }
+
+        string edzesNeve = picker.SelectedItem.ToString();
+        string nap = picker.ClassId;
+
+        try
+        {
+            // Átadjuk a nevet és a napot a szerkesztõnek
+            await Shell.Current.GoToAsync($"{nameof(EdzesSzerkesztesPage)}?EdzesNev={edzesNeve}&Nap={nap}");
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Hiba", $"Navigációs hiba: {ex.Message}", "OK");
         }
     }
 }
-

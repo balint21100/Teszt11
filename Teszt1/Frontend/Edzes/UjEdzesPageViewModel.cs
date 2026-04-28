@@ -1,65 +1,127 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using Teszt1;
 
 namespace Teszt1.Frontend.Edzes
 {
+    // Ezt az üzenetet küldjük át a főoldalnak mentéskor
+    public class EdzesMentveUzenet
+    {
+        public string Nap { get; set; }
+        public string EdzesNeve { get; set; }
+    }
+
+    // Így vesszük át a navigációból a napot
+    [QueryProperty(nameof(KivalasztottNap), "Nap")]
     public partial class UjEdzesPageViewModel : ObservableObject
     {
-        // Ezek a változók vannak a beviteli mezőkben (kicsivel kezdődnek!)
+        [ObservableProperty] private string kivalasztottNap; // Ide kerül pl. hogy "Hétfő"
+
         [ObservableProperty] private string edzesNeve;
-        [ObservableProperty] private string ujGyakorlatNeve;
-        [ObservableProperty] private string ujSorozat;
-        [ObservableProperty] private string ujIsmetles;
-
-        // Ez a lista fogja tartalmazni a felvett gyakorlatokat, mielőtt elmented az adatbázisba
         public ObservableCollection<string> FelvettGyakorlatok { get; set; } = new ObservableCollection<string>();
+        private Dictionary<string, int> _gyakorlatSzettek = new Dictionary<string, int>();
 
-        public UjEdzesPageViewModel()
+        [ObservableProperty] private bool isSulyemelesAktiv = true;
+        [ObservableProperty] private bool isEgyebAktiv = false;
+        [ObservableProperty] private string sulyemelesTabSzin = "#6200EE";
+        [ObservableProperty] private string egyebTabSzin = "Transparent";
+
+        [ObservableProperty] private string sulyGyakorlatNeve;
+        [ObservableProperty] private string suly;
+        [ObservableProperty] private string ismetles;
+        [ObservableProperty] private string sulyMegjegyzes;
+
+        [ObservableProperty] private string egyebTvekenysegNeve;
+        [ObservableProperty] private string egyebMegjegyzes;
+
+        [RelayCommand]
+        public void TabValtas(string tabNeve)
         {
-            // Inicializálás, ha szükséges
+            if (tabNeve == "Sulyemeles")
+            {
+                IsSulyemelesAktiv = true;
+                IsEgyebAktiv = false;
+                SulyemelesTabSzin = "#6200EE";
+                EgyebTabSzin = "Transparent";
+            }
+            else if (tabNeve == "Egyeb")
+            {
+                IsSulyemelesAktiv = false;
+                IsEgyebAktiv = true;
+                SulyemelesTabSzin = "Transparent";
+                EgyebTabSzin = "#6200EE";
+            }
         }
 
-        // 1. Gomb: Amikor hozzáadsz egy gyakorlatot a listához
         [RelayCommand]
-        public void GyakorlatHozzaadasa()
+        public void SulyGyakorlatHozzaadasa()
         {
-            if (!string.IsNullOrWhiteSpace(UjGyakorlatNeve) && !string.IsNullOrWhiteSpace(UjSorozat) && !string.IsNullOrWhiteSpace(UjIsmetles))
+            if (!string.IsNullOrWhiteSpace(SulyGyakorlatNeve) && !string.IsNullOrWhiteSpace(Suly) && !string.IsNullOrWhiteSpace(Ismetles))
             {
-                // Összerakjuk a szöveget: "Fekvenyomás - 4x10"
-                string gyakorlatSzoveg = $"{UjGyakorlatNeve} - {UjSorozat}x{UjIsmetles}";
+                string tisztaGyakorlatNev = SulyGyakorlatNeve.Trim();
 
-                // Hozzáadjuk a listához (ettől azonnal megjelenik a képernyőn!)
+                if (!_gyakorlatSzettek.ContainsKey(tisztaGyakorlatNev))
+                    _gyakorlatSzettek[tisztaGyakorlatNev] = 1;
+                else
+                    _gyakorlatSzettek[tisztaGyakorlatNev]++;
+
+                int aktualisSzettSzam = _gyakorlatSzettek[tisztaGyakorlatNev];
+                string gyakorlatSzoveg = $"🏋️ {tisztaGyakorlatNev} | {aktualisSzettSzam}. szett: {Suly}kg x {Ismetles} ism.";
+
+                if (!string.IsNullOrWhiteSpace(SulyMegjegyzes))
+                    gyakorlatSzoveg += $" ({SulyMegjegyzes})";
+
                 FelvettGyakorlatok.Add(gyakorlatSzoveg);
 
-                // Kiürítjük a beviteli mezőket a következő gyakorlathoz
-                UjGyakorlatNeve = string.Empty;
-                UjSorozat = string.Empty;
-                UjIsmetles = string.Empty;
+                Suly = string.Empty;
+                Ismetles = string.Empty;
+                SulyMegjegyzes = string.Empty;
             }
             else
             {
-                App.Current.MainPage.DisplayAlert("Hiba", "Tölts ki minden mezőt a gyakorlathoz!", "OK");
+                App.Current.MainPage.DisplayAlert("Hiányzó adat", "A gyakorlat neve, a súly és az ismétlés kötelező!", "OK");
             }
         }
 
-        // 2. Gomb: A végső mentés az adatbázisba
+        [RelayCommand]
+        public void EgyebGyakorlatHozzaadasa()
+        {
+            if (string.IsNullOrWhiteSpace(EgyebTvekenysegNeve) && string.IsNullOrWhiteSpace(EgyebMegjegyzes)) return;
+
+            string nev = string.IsNullOrWhiteSpace(EgyebTvekenysegNeve) ? "Egyéb gyakorlat" : EgyebTvekenysegNeve.Trim();
+            string gyakorlatSzoveg = $"🏃 {nev}";
+
+            if (!string.IsNullOrWhiteSpace(EgyebMegjegyzes))
+                gyakorlatSzoveg += $" ({EgyebMegjegyzes})";
+
+            FelvettGyakorlatok.Add(gyakorlatSzoveg);
+
+            EgyebTvekenysegNeve = string.Empty;
+            EgyebMegjegyzes = string.Empty;
+        }
+
         [RelayCommand]
         public async Task EdzesMentes()
         {
-            if (string.IsNullOrWhiteSpace(EdzesNeve) || FelvettGyakorlatok.Count == 0)
+            if (string.IsNullOrWhiteSpace(EdzesNeve))
             {
-                await App.Current.MainPage.DisplayAlert("Hiba", "Adj nevet az edzésnek és vegyél fel legalább egy gyakorlatot!", "OK");
+                await App.Current.MainPage.DisplayAlert("Hiba", "Kérlek, legalább az edzés nevét add meg a mentéshez!", "OK");
                 return;
             }
 
-            // --- IDE JÖN MAJD A MYSQL MENTÉS LOGIKÁJA KÉSŐBB ---
-            // Például: _databaseService.UjEdzesMentese(EdzesNeve, FelvettGyakorlatok);
+            // ÜZENET KÜLDÉSE A FŐOLDALNAK! Megmondjuk neki, hogy frissítse a listát!
+            WeakReferenceMessenger.Default.Send(new EdzesMentveUzenet
+            {
+                Nap = KivalasztottNap,
+                EdzesNeve = EdzesNeve
+            });
 
-            await App.Current.MainPage.DisplayAlert("Siker", $"A(z) {EdzesNeve} sikeresen mentve {FelvettGyakorlatok.Count} gyakorlattal!", "OK");
-
-            // Visszalépünk az előző oldalra (az Edzéstervhez)
-            await Shell.Current.GoToAsync("..");
+            await App.Current.MainPage.DisplayAlert("Sikeres mentés", $"A(z) {EdzesNeve} bekerült a {KivalasztottNap}i listába!", "OK");
+            await Microsoft.Maui.Controls.Shell.Current.GoToAsync("..");
         }
     }
 }

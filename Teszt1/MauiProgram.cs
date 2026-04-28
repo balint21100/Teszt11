@@ -2,6 +2,7 @@
 using Teszt1.Bakckend.Calsses;
 using Teszt1.Frontend;
 using Teszt1.Bakckend.Database;
+using Teszt1.Frontend.Edzes;
 
 namespace Teszt1
 {

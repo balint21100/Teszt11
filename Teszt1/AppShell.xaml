@@ -4,25 +4,31 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:frontend="clr-namespace:Teszt1.Frontend"
     xmlns:root="clr-namespace:Teszt1"
+    xmlns:edzes="clr-namespace:Teszt1.Frontend.Edzes"
+    xmlns:stat="clr-namespace:Teszt1.Frontend.Statisztika"
     Shell.FlyoutBehavior="Flyout"
     Title="Teszt1">
 
 
     <FlyoutItem Title="Étkezés">
-        <!-- Itt a root:MainPage-et használjuk, mert a MainPage a Teszt1 névtérben van -->
         <ShellContent ContentTemplate="{DataTemplate root:MainPage}" Route="MainPage" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Edzésterv">
-        <ShellContent ContentTemplate="{DataTemplate frontend:EdzesPage}" Route="EdzesPage" />
+    <FlyoutItem Title="Edzés">
+        <ShellContent ContentTemplate="{DataTemplate edzes:EdzesPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="EÜ Adatok">
+    <FlyoutItem Title="Egészségadatok">
         <ShellContent ContentTemplate="{DataTemplate frontend:EuAdatokPage}" Route="EuAdatokPage" />
     </FlyoutItem>
 
     <FlyoutItem Title="Barátaim">
         <ShellContent ContentTemplate="{DataTemplate frontend:BaratokPage}" Route="BaratokPage" />
     </FlyoutItem>
+
+    <FlyoutItem Title="Statisztika">
+        <ShellContent ContentTemplate="{DataTemplate stat:StatisztikaPage}" Route="StatisztikaPage" />
+    </FlyoutItem>
+
 
 </Shell>

@@ -14,7 +14,7 @@ namespace Teszt1.Bakckend.Calsses
         public int Id { get; set; }
         public int User_Id { get; set; }
         public DateTime Date { get; set; }
-        public string Name { get; set; } // Pl. "Reggeli", "Vacsora"
+        public string? Name { get; set; } // Pl. "Reggeli", "Vacsora"
 
         // NAVIGÁCIÓS TULAJDONSÁGOK (EF Core-hoz)
 

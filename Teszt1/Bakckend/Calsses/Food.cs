@@ -18,5 +18,11 @@ namespace Teszt1.Bakckend.Calsses
         public float Fat { get; set; }
 
         public string KcalDetail => $"{Kcal} kcal / 100g";
+
+
+        public override string ToString()
+        {
+            return $"Name: {Name} - Kcal: {Kcal} - Protein: {Protein} - Carbs: {Carbs} - Fat: {Fat}";
+        }
     }
 }

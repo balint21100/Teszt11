@@ -6,7 +6,7 @@ namespace Teszt1
 {
     public partial class MainPage : ContentPage
     {
-        DatabaseService _dbService = new DatabaseService();
+        
         private readonly MainPageViewModel _viewModel;
 
         public MainPage(MainPageViewModel viewModel)
@@ -20,8 +20,6 @@ namespace Teszt1
         protected override void OnAppearing()
         {
             base.OnAppearing();
-
-            // Szólunk a ViewModel-nek, hogy töltse le a MySQL-ből a friss adatokat
             _viewModel.LoadData();
         }
 

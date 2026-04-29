@@ -1,17 +1,20 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Teszt1.Bakckend.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Teszt1.Bakckend.Database;
 
 namespace Teszt1.Frontend
 {
     public partial class MainPageViewModel : ObservableObject
     {
-        private readonly DatabaseService _databaseService;
+        private readonly FitnessDbContext _databaseService;
+        private readonly MealService _mealService;
 
         // --- Kalória ---
         [ObservableProperty] private double calorieProgress;
@@ -33,47 +36,57 @@ namespace Teszt1.Frontend
         // Lista az utolsó étkezéseknek
         public ObservableCollection<string> RecentMeals { get; set; } = new ObservableCollection<string>();
 
-        public MainPageViewModel(DatabaseService databaseService)
+        public MainPageViewModel(FitnessDbContext databaseService, MealService mealService)
         {
             _databaseService = databaseService;
+            _mealService = mealService;
         }
 
-        // Ez fut le, amikor megnyitod a Főoldalt
+        
         public void LoadData()
         {
-            // 1. KALÓRIA LEKÉRDEZÉS (Biztonságosan)
-            float bevittKaloria = 0f;
-            float celKaloria = 2000f; // Később ezt a User táblából (TDEE) vesszük
+            // 1. Felhasználó azonosítója (példaként 1, később a bejelentkezésből jön)
+            int userId = 1;
 
-            try
-            {
-                bevittKaloria = _databaseService.GetTodayCalories(1);
-            }
-            catch
-            {
-                // Ha a Data is Null hiba jön (mert ma még nem ettél), akkor a bevittKaloria marad 0!
-            }
+            // 2. Makrók és kalóriák lekérése a Service-ből
+            // Ez a metódus végzi el a matekot a FitnessDbContext adatai alapján
+            var summary = _mealService.GetTodayNutritionSummary(userId);
 
-            CalorieProgress = Math.Min(bevittKaloria / celKaloria, 1.0);
-            CalorieText = $"Kalóriacél / Összkalória: {bevittKaloria} / {celKaloria} kcal";
+            // 3. Célértékek beállítása (Ezeket később érdemes a User táblából venni)
+            float goalKcal = 2000;
+            float goalCarbs = 250;
+            float goalProtein = 150;
+            float goalFat = 70;
 
-            // 2. MAKRÓK (Ideiglenesen beállítjuk őket, amíg nem írjuk meg az SQL-t a makrókra is)
-            CarbsText = "Szénhidrát: 0g / 250g";
-            CarbsProgress = 0.0;
+            // 4. UI Változók frissítése (A ProgressBar-ok és Feliratok számára)
 
-            ProteinText = "Fehérje: 0g / 150g";
-            ProteinProgress = 0.0;
+            // Kalória adatok
+            CalorieText = $"{Math.Round(summary.Calories)} / {goalKcal} kcal";
+            CalorieProgress = summary.Calories / goalKcal;
 
-            FatText = "Zsír: 0g / 70g";
-            FatProgress = 0.0;
+            // Szénhidrát (F1 formátum = 1 tizedesjegy, pl: 45.2g)
+            CarbsText = $"Szénhidrát: {summary.Carbs:F1}g / {goalCarbs}g";
+            CarbsProgress = summary.Carbs / goalCarbs;
 
-            // 3. UTOLSÓ 3 ÉTKEZÉS (Biztonságosan)
+            // Fehérje
+            ProteinText = $"Fehérje: {summary.Protein:F1}g / {goalProtein}g";
+            ProteinProgress = summary.Protein / goalProtein;
+
+            // Zsír
+            FatText = $"Zsír: {summary.Fat:F1}g / {goalFat}g";
+            FatProgress = summary.Fat / goalFat;
+
+            // 5. Utolsó 3 étkezés frissítése a listában
+            UpdateRecentMealsList(userId);
+        }
+        private void UpdateRecentMealsList(int userId)
+        {
             RecentMeals.Clear();
             try
             {
-                var meals = _databaseService.GetLastThreeMeals(1);
+                var meals = _mealService.GetLastThreeMealsFormatted(userId);
 
-                if (meals.Count == 0)
+                if (meals == null || meals.Count == 0)
                 {
                     RecentMeals.Add("Még nincs rögzített étkezés mára.");
                 }
@@ -85,11 +98,9 @@ namespace Teszt1.Frontend
                     }
                 }
             }
-            catch
+            catch (Exception)
             {
-                // Ha hiányzik a 'name' oszlop a MySQL-ből, akkor ne fekete hibaablak ugorjon fel,
-                // hanem csak írja ki a listába, hogy nem sikerült betölteni.
-                RecentMeals.Add("Hiba a betöltéskor (Ellenőrizd a MySQL-t!).");
+                RecentMeals.Add("Hiba az étkezések betöltésekor.");
             }
         }
 

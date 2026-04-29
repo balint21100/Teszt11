@@ -13,7 +13,7 @@ namespace Teszt1.Bakckend.Calsses
         public int Id { get; set; }
         public int Meal_Id { get; set; }
         public int Food_Id { get; set; }
-        public float Quantity { get; set; }
+        public float Qty { get; set; }
 
         // Így tudod majd lekérni az étel nevét/kalóriáját a bejegyzésen keresztül
         public virtual Meal Meal { get; set; }

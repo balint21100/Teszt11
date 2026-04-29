@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Teszt1.Bakckend.Calsses;
+using Teszt1.Bakckend.Interface;
+using Teszt1.Bakckend.Services;
 using Teszt1.Frontend;
 using Teszt1.Bakckend.Database;
 using Teszt1.Frontend.Edzes;
@@ -17,13 +19,29 @@ namespace Teszt1
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
+            // --- 1. ADATBÁZIS REGISZTRÁLÁSA ---
+            // Ez teszi lehetővé, hogy a DataProviderek megkapják a db-t a konstruktorban
+            builder.Services.AddDbContext<FitnessDbContext>();
 
-            // 1. A mi MySQL szervizünk (Singleton: csak egy példány készül belőle)
-            builder.Services.AddSingleton<DatabaseService>();
+            // --- 2. DATA PROVIDEREK REGISZTRÁLÁSA ---
+            builder.Services.AddScoped<IFoodDataProvider, FoodDataProvider>();
+            builder.Services.AddScoped<IBadgeDataProvider, BadgeDataProvider>();
+            builder.Services.AddScoped<IExerciseDataProvider, ExerciseDataProvider>();
+            builder.Services.AddScoped<IStepsDataProvider, StepsDataProvider>();
+            builder.Services.AddScoped<IWeightDataProvider, WeightDataProvider>();
+            builder.Services.AddScoped<IWorkoutDataProvider, WorkoutDataProvider>();
+            builder.Services.AddScoped<IWorkoutEntryDataProvider, WorkoutEntryDataProvider>();
+            builder.Services.AddScoped<IMealDataProvider, MealDataProvider>();
+            builder.Services.AddScoped<IMealEntryDataProvider, MealEntryDataProvider>();
+            builder.Services.AddScoped<IUserDataProvider, UserDataProvider>();
+
+            // --- 3. SZOLGÁLTATÁSOK (SERVICES) ---
+            builder.Services.AddScoped<MealService>();
+
 
             // 2. Oldalak és a hozzájuk tartozó ViewModel-ek
-            builder.Services.AddSingleton<MainPage>();
-            builder.Services.AddSingleton<MainPageViewModel>();
+            builder.Services.AddTransient<MainPage>();
+            builder.Services.AddTransient<MainPageViewModel>();
 
             // Ezt a kettőt adtuk most hozzá:
             builder.Services.AddTransient<EdzesPage>();

@@ -7,7 +7,7 @@ using Teszt1.Bakckend.Calsses;
 
 namespace Teszt1.Bakckend.Interface
 {
-    internal interface IUserDataProvider
+    public interface IUserDataProvider
     {
         public User AddUser(User oneUser);
         public void UpdateUser(int id, User user);

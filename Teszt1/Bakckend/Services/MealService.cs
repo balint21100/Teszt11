@@ -65,6 +65,31 @@ namespace Teszt1.Bakckend.Services
             return foods;
         }
 
+        public void AddMealWithEntry(int userId, string mealName, int foodId, float quantity)
+        {
+            // 1. Létrehozzuk az alap étkezést
+            var newMeal = new Meal
+            {
+                User_Id = userId,
+                Name = mealName,
+                Date = DateTime.Now // A mentés pillanatnyi ideje
+            };
+
+            // Elmentjük a MealDataProvider segítségével, és visszakapjuk a generált ID-t
+            var savedMeal = mealDataProvider.AddMeal(newMeal);
+
+            // 2. Létrehozzuk a tétel bejegyzést, ami összeköti a Meal-t és a Food-ot
+            var newEntry = new MealEntry
+            {
+                Meal_Id = savedMeal.Id, // Az imént mentett étkezés azonosítója
+                Food_Id = foodId,       // A kiválasztott kaja azonosítója
+                Qty = quantity          // A megadott mennyiség
+            };
+
+            // Elmentjük a tételt a MealEntryDataProvider segítségével
+            mealEntryDataProvider.AddMealEntry(newEntry);
+        }
+
 
         public List<string> GetLastThreeMealsFormatted(int userId)
         {

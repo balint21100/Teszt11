@@ -5,6 +5,7 @@ using Teszt1.Bakckend.Services;
 using Teszt1.Frontend;
 using Teszt1.Bakckend.Database;
 using Teszt1.Frontend.Edzes;
+using Teszt1.Frontend.Statisztika;
 
 namespace Teszt1
 {
@@ -56,6 +57,9 @@ namespace Teszt1
 
             builder.Services.AddTransient<BaratokPage>();
             builder.Services.AddTransient<BaratokPageViewModel>();
+
+            builder.Services.AddTransient<StatisztikaPage>();
+            builder.Services.AddTransient<StatisztikaPageViewModel>();
 
 #if DEBUG
             builder.Logging.AddDebug();

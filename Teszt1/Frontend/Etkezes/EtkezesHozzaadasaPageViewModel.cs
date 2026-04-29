@@ -39,6 +39,31 @@ namespace Teszt1.Frontend
                 SearchResults.Add(item);
             }
         }
+        [RelayCommand]
+        public async Task SaveMealAsync()
+        {
+            // Ellenőrizzük, hogy minden adat megvan-e
+            if (SelectedFood == null || string.IsNullOrWhiteSpace(MealName) || string.IsNullOrWhiteSpace(Quantity))
+            {
+                await App.Current.MainPage.DisplayAlert("Hiba", "Kérlek tölts ki minden mezőt!", "OK");
+                return;
+            }
+
+            if (float.TryParse(Quantity, out float qty))
+            {
+                // Meghívjuk a service-t (itt a userId-t most fix 1-re írom, de később a bejelentkezett felhasználót használd)
+                _mealService.AddMealWithEntry(1, MealName, SelectedFood.Id, qty);
+
+                await App.Current.MainPage.DisplayAlert("Siker", "Étkezés rögzítve!", "OK");
+
+                // Visszalépés az előző oldalra
+                await Shell.Current.GoToAsync("..");
+            }
+            else
+            {
+                await App.Current.MainPage.DisplayAlert("Hiba", "A mennyiség csak szám lehet!", "OK");
+            }
+        }
 
         //// Keresés gomb megnyomásakor fut le
         //[RelayCommand]

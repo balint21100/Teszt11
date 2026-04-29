@@ -19,7 +19,7 @@
 
         <ListView ItemsSource="{Binding SearchResults}" 
               SelectedItem="{Binding SelectedFood}" 
-              BackgroundColor="#111" 
+              BackgroundColor ="Teal" 
               HeightRequest="250">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="local2:Food">

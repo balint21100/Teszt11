@@ -1,4 +1,5 @@
 ﻿using Teszt1.Bakckend.Calsses;
+using Teszt1.Bakckend.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
@@ -12,21 +13,32 @@ namespace Teszt1.Frontend
 {
     public partial class EtkezesHozzaadasaPageViewModel : ObservableObject
     {
-        //private readonly DatabaseService _databaseService;
+        private readonly MealService _mealService;
 
-        //// Ezeket a változókat kötjük a beviteli mezőkhöz
-        //[ObservableProperty] private string mealName;
-        //[ObservableProperty] private string searchText;
-        //[ObservableProperty] private string quantity;
-        //[ObservableProperty] private Food selectedFood;
+        // Ezeket a változókat kötjük a beviteli mezőkhöz
+        [ObservableProperty] private string mealName;
+        [ObservableProperty] private string searchText;
+        [ObservableProperty] private string quantity;
+        [ObservableProperty] private Food selectedFood;
 
-        //// Ebbe a listába töltjük a keresés eredményét
-        //public ObservableCollection<Food> SearchResults { get; set; } = new ObservableCollection<Food>();
+        // Ebbe a listába töltjük a keresés eredményét
+        public ObservableCollection<Food> SearchResults { get; set; } = new ObservableCollection<Food>();
 
-        //public EtkezesHozzaadasaPageViewModel(DatabaseService databaseService)
-        //{
-        //    _databaseService = databaseService;
-        //}
+        public EtkezesHozzaadasaPageViewModel(MealService mealService)
+        {
+            _mealService = mealService;
+        }
+
+
+        public void LoadData()
+        {
+            SearchResults.Clear();
+            var foods = _mealService.GetFood();
+            foreach (var item in foods)
+            {
+                SearchResults.Add(item);
+            }
+        }
 
         //// Keresés gomb megnyomásakor fut le
         //[RelayCommand]

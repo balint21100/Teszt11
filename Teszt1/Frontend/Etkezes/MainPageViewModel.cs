@@ -13,7 +13,6 @@ namespace Teszt1.Frontend
 {
     public partial class MainPageViewModel : ObservableObject
     {
-        private readonly FitnessDbContext _databaseService;
         private readonly MealService _mealService;
 
         // --- Kalória ---
@@ -36,9 +35,8 @@ namespace Teszt1.Frontend
         // Lista az utolsó étkezéseknek
         public ObservableCollection<string> RecentMeals { get; set; } = new ObservableCollection<string>();
 
-        public MainPageViewModel(FitnessDbContext databaseService, MealService mealService)
+        public MainPageViewModel( MealService mealService)
         {
-            _databaseService = databaseService;
             _mealService = mealService;
         }
 

@@ -58,6 +58,14 @@ namespace Teszt1.Bakckend.Services
 
             return summary;
         }
+
+        public ICollection<Food> GetFood()
+        {
+            var foods = foodDataProvider.GetFoods();
+            return foods;
+        }
+
+
         public List<string> GetLastThreeMealsFormatted(int userId)
         {
             // 1. A MealDataProvider-en keresztül lekérjük a felhasználó étkezéseit

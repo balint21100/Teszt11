@@ -4,7 +4,7 @@
              x:Class="Teszt1.Frontend.EtkezesHozzaadasaPage"
              xmlns:local="clr-namespace:Teszt1.Frontend"
              xmlns:local2="clr-namespace:Teszt1.Bakckend.Calsses"
-             x:DataType="local2:Food"
+             x:DataType="local:EtkezesHozzaadasaPageViewModel"
              Title="Étkezés hozzáadása"
              BackgroundColor="Transparent">
     <VerticalStackLayout Padding="20" Spacing="15">

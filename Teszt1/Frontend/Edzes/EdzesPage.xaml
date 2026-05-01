@@ -3,12 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Teszt1.Frontend.Edzes"
              x:Class="Teszt1.Frontend.Edzes.EdzesPage"
+             x:DataType="local:EdzesPageViewModel"
              Title="Edzés"
              BackgroundColor="Transparent">
 
-    <ContentPage.BindingContext>
-        <local:EdzesPageViewModel />
-    </ContentPage.BindingContext>
 
     <Grid>
         <Image Source="hatterkep.png" Aspect="AspectFill" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>
@@ -17,7 +15,6 @@
             <ScrollView Grid.Row="0" Margin="0,0,0,10">
                 <Frame BackgroundColor="#B0000000" CornerRadius="20" Padding="20" BorderColor="Gray">
                     <VerticalStackLayout Spacing="10">
-
                         <VerticalStackLayout Spacing="5" Margin="0,0,0,15">
                             <Label Text="Heti edzésterv" FontSize="32" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />
                             <Label Text="{Binding AktualisHet}" FontSize="15" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center" TextTransform="Lowercase"/>

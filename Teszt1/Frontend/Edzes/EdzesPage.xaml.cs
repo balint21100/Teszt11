@@ -5,11 +5,13 @@ namespace Teszt1.Frontend.Edzes;
 
 public partial class EdzesPage : ContentPage
 {
-    public EdzesPage()
+    private readonly EdzesPageViewModel viewModel;
+    public EdzesPage(EdzesPageViewModel edzesPageViewModel)
     {
         InitializeComponent();
+        viewModel = edzesPageViewModel;
+        BindingContext = viewModel;
     }
-
     private async void OnEdzesKivalasztva(object sender, EventArgs e)
     {
         var picker = (Picker)sender;

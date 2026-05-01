@@ -71,7 +71,7 @@ namespace Teszt1.Bakckend.Database
             modelBuilder.Entity<WorkoutEntry>()
                 .HasOne(we => we.Workout)
                 .WithMany(w => w.Entries)
-                .HasForeignKey(we => we.Workout_Id)
+                .HasForeignKey(we => we.Workout_id)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Meal -> MealEntry (1:N)
@@ -100,7 +100,7 @@ namespace Teszt1.Bakckend.Database
             modelBuilder.Entity<WorkoutEntry>()
                 .HasOne(we => we.Exercise)
                 .WithMany()
-                .HasForeignKey(we => we.Exercise_Id)
+                .HasForeignKey(we => we.Exercise_id)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<MealEntry>()

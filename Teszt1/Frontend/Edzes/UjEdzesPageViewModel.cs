@@ -5,50 +5,67 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Teszt1;
+using Teszt1.Bakckend.Calsses;
+using Teszt1.Bakckend.Services;
 
 namespace Teszt1.Frontend.Edzes
 {
     // Ezt az üzenetet küldjük át a főoldalnak mentéskor
+    // Üzenet osztály a főoldal frissítéséhez
     public class EdzesMentveUzenet
     {
         public string Nap { get; set; }
         public string EdzesNeve { get; set; }
     }
 
-    // Így vesszük át a navigációból a napot
     [QueryProperty(nameof(KivalasztottNap), "Nap")]
     public partial class UjEdzesPageViewModel : ObservableObject
     {
-        [ObservableProperty] private string kivalasztottNap; // Ide kerül pl. hogy "Hétfő"
+        private readonly WorkoutService _workoutService;
 
+        [ObservableProperty] private string kivalasztottNap;
         [ObservableProperty] private string edzesNeve;
-        public ObservableCollection<string> FelvettGyakorlatok { get; set; } = new ObservableCollection<string>();
-        private Dictionary<string, int> _gyakorlatSzettek = new Dictionary<string, int>();
 
+        // UI megjelenítéshez (szöveges lista)
+        public ObservableCollection<string> FelvettGyakorlatok { get; set; } = new ObservableCollection<string>();
+
+        // Backend mentéshez (objektum lista)
+        private List<WorkoutEntryDto> _mentendoTetelek = new List<WorkoutEntryDto>();
+
+        // Súlyzós edzés mezők
+        [ObservableProperty] private string gyakorlatNeve;
+        [ObservableProperty] private string suly;
+        [ObservableProperty] private string ismetles;
+
+        // Egyéb edzés mezők
+        [ObservableProperty] private string egyebTvekenysegNeve;
+        [ObservableProperty] private string egyebMegjegyzes;
+
+        // Tab kezelés
         [ObservableProperty] private bool isSulyemelesAktiv = true;
         [ObservableProperty] private bool isEgyebAktiv = false;
         [ObservableProperty] private string sulyemelesTabSzin = "#6200EE";
         [ObservableProperty] private string egyebTabSzin = "Transparent";
 
-        [ObservableProperty] private string sulyGyakorlatNeve;
-        [ObservableProperty] private string suly;
-        [ObservableProperty] private string ismetles;
-        [ObservableProperty] private string sulyMegjegyzes;
+        public UjEdzesPageViewModel(WorkoutService workoutService)
+        {
+            _workoutService = workoutService;
+        }
 
-        [ObservableProperty] private string egyebTvekenysegNeve;
-        [ObservableProperty] private string egyebMegjegyzes;
+        // MAUI default konstruktor, ha a DI nincs beállítva (opcionális)
+        
 
         [RelayCommand]
-        public void TabValtas(string tabNeve)
+        public void TabValtas(string tab)
         {
-            if (tabNeve == "Sulyemeles")
+            if (tab == "Sulyemeles")
             {
                 IsSulyemelesAktiv = true;
                 IsEgyebAktiv = false;
                 SulyemelesTabSzin = "#6200EE";
                 EgyebTabSzin = "Transparent";
             }
-            else if (tabNeve == "Egyeb")
+            else
             {
                 IsSulyemelesAktiv = false;
                 IsEgyebAktiv = true;
@@ -60,41 +77,45 @@ namespace Teszt1.Frontend.Edzes
         [RelayCommand]
         public void SulyGyakorlatHozzaadasa()
         {
-            if (!string.IsNullOrWhiteSpace(SulyGyakorlatNeve) && !string.IsNullOrWhiteSpace(Suly) && !string.IsNullOrWhiteSpace(Ismetles))
+            if (string.IsNullOrWhiteSpace(GyakorlatNeve) || string.IsNullOrWhiteSpace(Suly) || string.IsNullOrWhiteSpace(Ismetles))
+                return;
+
+            if (float.TryParse(Suly, out float sulyErtek) && int.TryParse(Ismetles, out int ismetlesErtek))
             {
-                string tisztaGyakorlatNev = SulyGyakorlatNeve.Trim();
+                // 1. Hozzáadás a belső listához a mentéshez
+                _mentendoTetelek.Add(new WorkoutEntryDto
+                {
+                    ExerciseName = GyakorlatNeve,
+                    Weight = sulyErtek,
+                    Reps = ismetlesErtek,
+                    Sets = 1 // Alapértelmezett 1 szett, vagy bővíthető a UI
+                });
 
-                if (!_gyakorlatSzettek.ContainsKey(tisztaGyakorlatNev))
-                    _gyakorlatSzettek[tisztaGyakorlatNev] = 1;
-                else
-                    _gyakorlatSzettek[tisztaGyakorlatNev]++;
+                // 2. Megjelenítés a listában
+                FelvettGyakorlatok.Add($"💪 {GyakorlatNeve} - {Suly}kg x {Ismetles}");
 
-                int aktualisSzettSzam = _gyakorlatSzettek[tisztaGyakorlatNev];
-                string gyakorlatSzoveg = $"🏋️ {tisztaGyakorlatNev} | {aktualisSzettSzam}. szett: {Suly}kg x {Ismetles} ism.";
-
-                if (!string.IsNullOrWhiteSpace(SulyMegjegyzes))
-                    gyakorlatSzoveg += $" ({SulyMegjegyzes})";
-
-                FelvettGyakorlatok.Add(gyakorlatSzoveg);
-
+                // Mezők ürítése
+                GyakorlatNeve = string.Empty;
                 Suly = string.Empty;
                 Ismetles = string.Empty;
-                SulyMegjegyzes = string.Empty;
-            }
-            else
-            {
-                App.Current.MainPage.DisplayAlert("Hiányzó adat", "A gyakorlat neve, a súly és az ismétlés kötelező!", "OK");
             }
         }
 
         [RelayCommand]
         public void EgyebGyakorlatHozzaadasa()
         {
-            if (string.IsNullOrWhiteSpace(EgyebTvekenysegNeve) && string.IsNullOrWhiteSpace(EgyebMegjegyzes)) return;
+            if (string.IsNullOrWhiteSpace(EgyebTvekenysegNeve)) return;
 
-            string nev = string.IsNullOrWhiteSpace(EgyebTvekenysegNeve) ? "Egyéb gyakorlat" : EgyebTvekenysegNeve.Trim();
-            string gyakorlatSzoveg = $"🏃 {nev}";
+            // Egyéb edzésnél (pl. futás) 0 súlyt és 0 ismétlést mentünk, vagy a megjegyzésbe tesszük
+            _mentendoTetelek.Add(new WorkoutEntryDto
+            {
+                ExerciseName = EgyebTvekenysegNeve,
+                Weight = 0,
+                Reps = 0,
+                Sets = 0
+            });
 
+            string gyakorlatSzoveg = $"🏃 {EgyebTvekenysegNeve}";
             if (!string.IsNullOrWhiteSpace(EgyebMegjegyzes))
                 gyakorlatSzoveg += $" ({EgyebMegjegyzes})";
 
@@ -109,19 +130,39 @@ namespace Teszt1.Frontend.Edzes
         {
             if (string.IsNullOrWhiteSpace(EdzesNeve))
             {
-                await App.Current.MainPage.DisplayAlert("Hiba", "Kérlek, legalább az edzés nevét add meg a mentéshez!", "OK");
+                await App.Current.MainPage.DisplayAlert("Hiba", "Kérlek, adj meg egy nevet az edzésnek!", "OK");
                 return;
             }
 
-            // ÜZENET KÜLDÉSE A FŐOLDALNAK! Megmondjuk neki, hogy frissítse a listát!
-            WeakReferenceMessenger.Default.Send(new EdzesMentveUzenet
+            if (_mentendoTetelek.Count == 0)
             {
-                Nap = KivalasztottNap,
-                EdzesNeve = EdzesNeve
-            });
+                await App.Current.MainPage.DisplayAlert("Hiba", "Még nem adtál hozzá gyakorlatot!", "OK");
+                return;
+            }
 
-            await App.Current.MainPage.DisplayAlert("Sikeres mentés", $"A(z) {EdzesNeve} bekerült a {KivalasztottNap}i listába!", "OK");
-            await Microsoft.Maui.Controls.Shell.Current.GoToAsync("..");
+            try
+            {
+                // TODO: Itt kérd le az aktuális bejelentkezett User Id-ját
+                int tempUserId = 1;
+
+                // Hívjuk a service-t a mentéshez
+                _workoutService.AddWorkoutWithEntries(tempUserId, EdzesNeve, _mentendoTetelek);
+
+                // Üzenet a főoldalnak
+                WeakReferenceMessenger.Default.Send(new EdzesMentveUzenet
+                {
+                    Nap = KivalasztottNap,
+                    EdzesNeve = EdzesNeve
+                });
+
+                await App.Current.MainPage.DisplayAlert("Siker", "Edzés sikeresen mentve!", "OK");
+                await Shell.Current.GoToAsync("..");
+            }
+            catch (Exception ex)
+            {
+                await App.Current.MainPage.DisplayAlert("Hiba", $"Hiba történt mentés közben: {ex.Message}", "OK");
+            }
         }
+
     }
 }

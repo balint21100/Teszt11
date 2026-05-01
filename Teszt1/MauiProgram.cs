@@ -38,6 +38,7 @@ namespace Teszt1
 
             // --- 3. SZOLGÁLTATÁSOK (SERVICES) ---
             builder.Services.AddScoped<MealService>();
+            builder.Services.AddScoped<WorkoutService>();
 
 
             // 2. Oldalak és a hozzájuk tartozó ViewModel-ek
@@ -47,6 +48,12 @@ namespace Teszt1
             // Ezt a kettőt adtuk most hozzá:
             builder.Services.AddTransient<EdzesPage>();
             builder.Services.AddTransient<EdzesPageViewModel>();
+
+            builder.Services.AddTransient<UjEdzesPage>();
+            builder.Services.AddTransient<UjEdzesPageViewModel>();
+
+            builder.Services.AddTransient<EdzesSzerkesztesPage>();
+            builder.Services.AddTransient<EdzesSzerkesztesPageViewModel>();
 
             // Ezt a kettőt kell hozzáírni az eddigiek alá:
             builder.Services.AddTransient<EtkezesHozzaadasaPage>();

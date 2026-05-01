@@ -35,6 +35,6 @@ namespace Teszt1.Bakckend.Database
         }
 
         public ICollection<WorkoutEntry> GetWorkoutEntries(int workoutId) =>
-            _db.WorkoutEntries.Where(x => x.Workout_Id == workoutId).ToHashSet();
+            _db.WorkoutEntries.Where(x => x.Workout_id == workoutId).ToHashSet();
     }
 }

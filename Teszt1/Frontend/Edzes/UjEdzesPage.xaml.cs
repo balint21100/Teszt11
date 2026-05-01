@@ -1,9 +1,18 @@
+
+
 namespace Teszt1.Frontend.Edzes;
 
 public partial class UjEdzesPage : ContentPage
 {
-	public UjEdzesPage()
+	private readonly UjEdzesPageViewModel viewModel;
+	public UjEdzesPage(UjEdzesPageViewModel ujEdzesPageViewModel)
 	{
 		InitializeComponent();
+		viewModel = ujEdzesPageViewModel;
+		BindingContext = viewModel;
 	}
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+    }
 }

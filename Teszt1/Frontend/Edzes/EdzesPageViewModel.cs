@@ -3,50 +3,58 @@ using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Teszt1; // A te DatabaseService-ed névtere
+using Teszt1;
+using Teszt1.Bakckend.Services; // A te DatabaseService-ed névtere
 
 namespace Teszt1.Frontend.Edzes
 {
     public partial class EdzesPageViewModel : ObservableObject
     {
 
-        //// Dinamikus listák a napokhoz
-        //[ObservableProperty] private ObservableCollection<string> hetfoEdzesek = new() { "+ Új edzés hozzáadása" };
-        //[ObservableProperty] private ObservableCollection<string> keddEdzesek = new() { "+ Új edzés hozzáadása" };
-        //[ObservableProperty] private ObservableCollection<string> szerdaEdzesek = new() { "+ Új edzés hozzáadása" };
-        //[ObservableProperty] private ObservableCollection<string> csutortokEdzesek = new() { "+ Új edzés hozzáadása" };
-        //[ObservableProperty] private ObservableCollection<string> pentekEdzesek = new() { "+ Új edzés hozzáadása" };
-        //[ObservableProperty] private ObservableCollection<string> szombatEdzesek = new() { "+ Új edzés hozzáadása" };
-        //[ObservableProperty] private ObservableCollection<string> vasarnapEdzesek = new() { "+ Új edzés hozzáadása" };
+        // Dinamikus listák a napokhoz
+        private readonly WorkoutService workoutService;
 
-        //[ObservableProperty] private string kivalasztottHetfo;
-        //[ObservableProperty] private string kivalasztottKedd;
-        //[ObservableProperty] private string kivalasztottSzerda;
-        //[ObservableProperty] private string kivalasztottCsutortok;
-        //[ObservableProperty] private string kivalasztottPentek;
-        //[ObservableProperty] private string kivalasztottSzombat;
-        //[ObservableProperty] private string kivalasztottVasarnap;
+        [ObservableProperty] private ObservableCollection<string> hetfoEdzesek = new() { "+ Új edzés hozzáadása" };
+        [ObservableProperty] private ObservableCollection<string> keddEdzesek = new() { "+ Új edzés hozzáadása" };
+        [ObservableProperty] private ObservableCollection<string> szerdaEdzesek = new() { "+ Új edzés hozzáadása" };
+        [ObservableProperty] private ObservableCollection<string> csutortokEdzesek = new() { "+ Új edzés hozzáadása" };
+        [ObservableProperty] private ObservableCollection<string> pentekEdzesek = new() { "+ Új edzés hozzáadása" };
+        [ObservableProperty] private ObservableCollection<string> szombatEdzesek = new() { "+ Új edzés hozzáadása" };
+        [ObservableProperty] private ObservableCollection<string> vasarnapEdzesek = new() { "+ Új edzés hozzáadása" };
 
-        //[ObservableProperty] private string hetfoKeret = "Gray";
-        //[ObservableProperty] private string keddKeret = "Gray";
-        //[ObservableProperty] private string szerdaKeret = "Gray";
-        //[ObservableProperty] private string csutortokKeret = "Gray";
-        //[ObservableProperty] private string pentekKeret = "Gray";
-        //[ObservableProperty] private string szombatKeret = "Gray";
-        //[ObservableProperty] private string vasarnapKeret = "Gray";
+        [ObservableProperty] private string kivalasztottHetfo;
+        [ObservableProperty] private string kivalasztottKedd;
+        [ObservableProperty] private string kivalasztottSzerda;
+        [ObservableProperty] private string kivalasztottCsutortok;
+        [ObservableProperty] private string kivalasztottPentek;
+        [ObservableProperty] private string kivalasztottSzombat;
+        [ObservableProperty] private string kivalasztottVasarnap;
 
-        //public string AktualisHet
-        //{
-        //    get
-        //    {
-        //        DateTime date = DateTime.Now;
-        //        int diff = (7 + (date.DayOfWeek - DayOfWeek.Monday)) % 7;
-        //        DateTime startOfWeek = date.AddDays(-1 * diff).Date;
-        //        DateTime endOfWeek = startOfWeek.AddDays(6);
-        //        var culture = new System.Globalization.CultureInfo("hu-HU");
-        //        return $"{startOfWeek.ToString("yyyy. MMMM dd.", culture)} - {endOfWeek.ToString("yyyy. MMMM dd.", culture)}".ToLower();
-        //    }
-        //}
+        [ObservableProperty] private string hetfoKeret = "Gray";
+        [ObservableProperty] private string keddKeret = "Gray";
+        [ObservableProperty] private string szerdaKeret = "Gray";
+        [ObservableProperty] private string csutortokKeret = "Gray";
+        [ObservableProperty] private string pentekKeret = "Gray";
+        [ObservableProperty] private string szombatKeret = "Gray";
+        [ObservableProperty] private string vasarnapKeret = "Gray";
+
+
+
+        public EdzesPageViewModel()
+        {
+        }
+        public string AktualisHet
+        {
+            get
+            {
+                DateTime date = DateTime.Now;
+                int diff = (7 + (date.DayOfWeek - DayOfWeek.Monday)) % 7;
+                DateTime startOfWeek = date.AddDays(-1 * diff).Date;
+                DateTime endOfWeek = startOfWeek.AddDays(6);
+                var culture = new System.Globalization.CultureInfo("hu-HU");
+                return $"{startOfWeek.ToString("yyyy. MMMM dd.", culture)} - {endOfWeek.ToString("yyyy. MMMM dd.", culture)}".ToLower();
+            }
+        }
 
         //public EdzesPageViewModel()
         //{
@@ -127,5 +135,6 @@ namespace Teszt1.Frontend.Edzes
         //        foreach (var e in vasarnapLista) if (!VasarnapEdzesek.Contains(e)) VasarnapEdzesek.Insert(VasarnapEdzesek.Count - 1, e);
         //    });
         //}
+
     }
 }

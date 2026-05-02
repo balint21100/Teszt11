@@ -7,7 +7,9 @@
              Title="Statisztika"
              BackgroundColor="Transparent">
 
-
+    <ContentPage.BindingContext>
+        <local:StatisztikaPageViewModel />
+    </ContentPage.BindingContext>
     <Grid>
         <Image Source="hatterkep.png" Aspect="AspectFill" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>
 
@@ -18,7 +20,7 @@
                     <Label Text="Elemzések" FontSize="28" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" Margin="0,0,0,10"/>
 
                     <Grid ColumnDefinitions="*, *" ColumnSpacing="10">
-                        <Button Grid.Column="0" Text="Edzés" Command="{Binding TabValtasCommand}" CommandParameter="Edzes" BackgroundColor="{Binding EdzesTabSzin}" TextColor="White" CornerRadius="15" FontAttributes="Bold" HeightRequest="45"/>
+                        <Button Grid.Column="0" Text="Edzés" Command="{Binding TabValatasCommand}" CommandParameter="Edzes" BackgroundColor="{Binding EdzesTabSzin}" TextColor="White" CornerRadius="15" FontAttributes="Bold" HeightRequest="45"/>
                         <Button Grid.Column="1" Text="Étkezés" Command="{Binding TabValtasCommand}" CommandParameter="Etkezes" BackgroundColor="{Binding EtkezesTabSzin}" TextColor="White" CornerRadius="15" FontAttributes="Bold" HeightRequest="45"/>
                     </Grid>
 
@@ -45,14 +47,14 @@
                             </Grid>
 
                             <Button IsVisible="{Binding IsEgyeniLathato}" 
-                                    Command="{Binding AdatokFrissiteseCommand}" 
-                                    Text="Adatok lekérdezése" 
-                                    BackgroundColor="#6200EE" 
-                                    TextColor="White" 
-                                    CornerRadius="15" 
-                                    FontAttributes="Bold"
-                                    Margin="0,5,0,0" 
-                                    HeightRequest="45"/>
+                                Command="{Binding FrissitsAdatokatCommand}" 
+                                Text="Adatok lekérdezése" 
+                                BackgroundColor="#6200EE" 
+                                TextColor="White" 
+                                CornerRadius="15" 
+                                FontAttributes="Bold"
+                                Margin="0,5,0,0" 
+                                HeightRequest="45"/>
 
                         </VerticalStackLayout>
                     </Frame>

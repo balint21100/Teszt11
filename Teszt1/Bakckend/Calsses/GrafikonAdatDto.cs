@@ -10,6 +10,6 @@ namespace Teszt1.Bakckend.Calsses
     {
         public DateTime Datum { get; set; }
         public float Ertek { get; set; }
-        public string Cimke { get; set; }
+        public string Name { get; set; }
     }
 }

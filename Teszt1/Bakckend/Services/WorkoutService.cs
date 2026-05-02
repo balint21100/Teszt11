@@ -90,24 +90,33 @@ namespace Teszt1.Bakckend.Services
             return workoutnames;
         }
 
-        public List<GrafikonAdatDto> GetEdzesStatisztika(int userId, int napokSzama)
+        public List<GrafikonAdatDto> GetEdzesStatisztika(int userId)
         {
-            var hatarido = DateTime.Now.AddDays(-napokSzama);
-            var edzesek = _workoutProvider.GetWorkouts(userId)
-                .Where(w => w.Date >= hatarido)
-                .ToList();
+            List<GrafikonAdatDto> lista = new List<GrafikonAdatDto>();
+            var workout = _workoutProvider.GetWorkouts(userId);
+            foreach (var item in workout)
+            {
 
-            // Napok szerint csoportosítjuk és megszámoljuk az edzéseket
-            return edzesek
-                .GroupBy(w => w.Date.Date)
-                .Select(g => new GrafikonAdatDto
+                var entries = _entryProvider.GetWorkoutEntries(item.Id);
+                var excersises = _exerciseProvider.GetExercises();
+                foreach (var item2 in entries)
                 {
-                    Datum = g.Key,
-                    Ertek = g.Count(),
-                    Cimke = g.Key.ToString("MM.dd")
-                })
-                .OrderBy(x => x.Datum)
-                .ToList();
+                    var gyakorlat = excersises.Where(x => x.Id == item2.Exercise_id).FirstOrDefault();
+                    if (gyakorlat != null)
+                    {
+                        lista.Add(new GrafikonAdatDto
+                        {
+                            Datum = item.Date,
+                            Name = gyakorlat.Name,
+                            Ertek = item2.Weight
+                        });
+                    }
+                }
+                
+                
+
+            }
+            return lista;
         }
 
         public List<TopListaElemDto> GetLegnehezebbGyakorlatok(int userId)

@@ -1,5 +1,6 @@
-using System;
+using Microcharts.Maui;
 using Microsoft.Maui.Controls;
+using System;
 
 namespace Teszt1.Frontend.Statisztika;
 
@@ -17,6 +18,7 @@ public partial class StatisztikaPage : ContentPage
     {
         if (BindingContext is StatisztikaPageViewModel vm)
         {
+            
             vm.FrissitsAdatokatCommand.Execute(null);
         }
     }

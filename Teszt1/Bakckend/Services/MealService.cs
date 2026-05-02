@@ -152,7 +152,7 @@ namespace Teszt1.Bakckend.Services
                         if (food != null) napiKcal += (food.Kcal * entry.Qty) / 100f;
                     }
                 }
-                result.Add(new GrafikonAdatDto { Datum = nap.Key, Ertek = napiKcal, Cimke = nap.Key.ToString("MM.dd") });
+                result.Add(new GrafikonAdatDto { Datum = nap.Key, Ertek = napiKcal, Name = nap.Key.ToString("MM.dd") });
             }
             return result.OrderBy(x => x.Datum).ToList();
         }

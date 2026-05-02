@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Teszt1.Frontend.Authe"
+             x:DataType="local:AuthenticationViewModel"
+             x:Class="Teszt1.Frontend.Authe.AuthPage"
+             Shell.NavBarIsVisible="False"
+             Shell.FlyoutBehavior="Disabled"
+             BackgroundColor="#121212">
+    <Grid>
+        <BoxView Color="#1e1e1e" VerticalOptions="Fill" HorizontalOptions="Fill"/>
+
+        <VerticalStackLayout VerticalOptions="Center" Padding="30" Spacing="20">
+
+            <Label Text="{Binding Title}" 
+                   FontSize="32" 
+                   TextColor="White" 
+                   FontAttributes="Bold" 
+                   HorizontalOptions="Center" 
+                   Margin="0,0,0,20"/>
+
+            <Frame BackgroundColor="#2b2b2b" Padding="0" CornerRadius="10" BorderColor="Transparent"
+                   IsVisible="{Binding IsRegisterMode}">
+                <Entry Placeholder="Felhasználónév" 
+                       Text="{Binding Username}" 
+                       PlaceholderColor="Gray" 
+                       TextColor="White" 
+                       Margin="15,0"/>
+            </Frame>
+
+            <Frame BackgroundColor="#2b2b2b" Padding="0" CornerRadius="10" BorderColor="Transparent">
+                <Entry Placeholder="Email cím" 
+                       Text="{Binding Email}" 
+                       Keyboard="Email"
+                       PlaceholderColor="Gray" 
+                       TextColor="White" 
+                       Margin="15,0"/>
+            </Frame>
+
+            <Frame BackgroundColor="#2b2b2b" Padding="0" CornerRadius="10" BorderColor="Transparent">
+                <Entry Placeholder="Jelszó" 
+                       Text="{Binding Password}" 
+                       IsPassword="True"
+                       PlaceholderColor="Gray" 
+                       TextColor="White" 
+                       Margin="15,0"/>
+            </Frame>
+
+            <Button Text="{Binding ButtonText}" 
+                    Command="{Binding AuthActionCommand}"
+                    BackgroundColor="#6200EE" 
+                    TextColor="White" 
+                    HeightRequest="50" 
+                    CornerRadius="25" 
+                    FontAttributes="Bold"
+                    Margin="0,20,0,0"/>
+
+            <Button Text="{Binding SwitchText}" 
+                    Command="{Binding SwitchModeCommand}"
+                    BackgroundColor="Transparent" 
+                    TextColor="LightGray" 
+                    FontSize="12"
+                    TextTransform="None"/>
+
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

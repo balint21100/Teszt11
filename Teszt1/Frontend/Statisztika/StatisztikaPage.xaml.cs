@@ -1,4 +1,4 @@
-using Microcharts.Maui;
+
 using Microsoft.Maui.Controls;
 using System;
 

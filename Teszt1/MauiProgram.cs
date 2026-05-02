@@ -5,6 +5,7 @@ using Teszt1.Bakckend.Services;
 using Teszt1.Frontend;
 using Teszt1.Bakckend.Database;
 using Teszt1.Frontend.Edzes;
+using Teszt1.Frontend.Authe;
 using Teszt1.Frontend.Statisztika;
 
 namespace Teszt1
@@ -45,6 +46,9 @@ namespace Teszt1
             // 2. Oldalak és a hozzájuk tartozó ViewModel-ek
             builder.Services.AddTransient<MainPage>();
             builder.Services.AddTransient<MainPageViewModel>();
+
+            builder.Services.AddTransient<AuthPage>();
+            builder.Services.AddTransient<AuthenticationViewModel>();
 
             // Ezt a kettőt adtuk most hozzá:
             builder.Services.AddTransient<EdzesPage>();

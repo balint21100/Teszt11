@@ -1,6 +1,7 @@
 ﻿using Teszt1.Frontend;
 using Teszt1.Frontend.Edzes;
 using Teszt1.Frontend.Statisztika;
+using Teszt1.Frontend.Authe;
 namespace Teszt1
 {
     public partial class AppShell : Shell
@@ -15,6 +16,10 @@ namespace Teszt1
             Routing.RegisterRoute(nameof(UjEdzesPage), typeof(UjEdzesPage));
             Routing.RegisterRoute(nameof(EdzesSzerkesztesPage), typeof(EdzesSzerkesztesPage));
             Routing.RegisterRoute(nameof(StatisztikaPage), typeof(StatisztikaPage));
+            Routing.RegisterRoute(nameof(AuthPage), typeof(AuthPage));
+
+
+            
         }
     }
 }

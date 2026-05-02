@@ -6,6 +6,7 @@
     xmlns:root="clr-namespace:Teszt1"
     xmlns:edzes="clr-namespace:Teszt1.Frontend.Edzes"
     xmlns:stat="clr-namespace:Teszt1.Frontend.Statisztika"
+    xmlns:views="clr-namespace:Teszt1.Frontend.Authe"
     Shell.FlyoutBehavior="Flyout"
     Title="Teszt1">
 
@@ -29,6 +30,10 @@
     <FlyoutItem Title="Statisztika">
         <ShellContent ContentTemplate="{DataTemplate stat:StatisztikaPage}" Route="StatisztikaPage" />
     </FlyoutItem>
-
+    
+    <FlyoutItem Title="Login">
+    <ShellContent
+        ContentTemplate="{DataTemplate views:AuthPage}" Route="AuthPage" />
+    </FlyoutItem>
 
 </Shell>

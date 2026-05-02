@@ -1,6 +1,7 @@
 ﻿using Teszt1.Bakckend.Calsses;
 using Teszt1.Frontend;
 using Teszt1.Bakckend.Database;
+using Teszt1.Frontend.Authe;
 
 namespace Teszt1
 {
@@ -14,6 +15,7 @@ namespace Teszt1
             InitializeComponent();
             _viewModel = viewModel;
             BindingContext = _viewModel;
+            
         }
 
         // Ez a függvény minden alkalommal lefut, amikor az oldal láthatóvá válik

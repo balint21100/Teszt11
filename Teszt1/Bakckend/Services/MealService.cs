@@ -128,5 +128,65 @@ namespace Teszt1.Bakckend.Services
 
             return formattedList;
         }
+
+        // MealService.cs - Add hozzá ezt
+        public List<GrafikonAdatDto> GetKaloriaStatisztika(int userId, int napokSzama)
+        {
+            var hatarido = DateTime.Now.AddDays(-napokSzama);
+            var meals = mealDataProvider.GetMeals(userId)
+                .Where(m => m.Date >= hatarido)
+                .ToList();
+
+            var result = new List<GrafikonAdatDto>();
+            var csoportositott = meals.GroupBy(m => m.Date.Date);
+
+            foreach (var nap in csoportositott)
+            {
+                float napiKcal = 0;
+                foreach (var meal in nap)
+                {
+                    var entries = mealEntryDataProvider.GetMealEntries(meal.Id);
+                    foreach (var entry in entries)
+                    {
+                        var food = foodDataProvider.GetFoods().FirstOrDefault(f => f.Id == entry.Food_Id);
+                        if (food != null) napiKcal += (food.Kcal * entry.Qty) / 100f;
+                    }
+                }
+                result.Add(new GrafikonAdatDto { Datum = nap.Key, Ertek = napiKcal, Cimke = nap.Key.ToString("MM.dd") });
+            }
+            return result.OrderBy(x => x.Datum).ToList();
+        }
+
+        public Macros GetAtlagosMakrok(int userId, int napok)
+        {
+            var hatarido = DateTime.Now.AddDays(-napok);
+            var meals = mealDataProvider.GetMeals(userId).Where(m => m.Date >= hatarido).ToList();
+
+            float osszProt = 0, osszCh = 0, osszZsir = 0;
+            if (!meals.Any()) return new Macros();
+
+            foreach (var meal in meals)
+            {
+                var entries = mealEntryDataProvider.GetMealEntries(meal.Id);
+                foreach (var entry in entries)
+                {
+                    var food = foodDataProvider.GetFoods().FirstOrDefault(f => f.Id == entry.Food_Id);
+                    if (food != null)
+                    {
+                        osszProt += (food.Protein * entry.Qty) / 100f;
+                        osszCh += (food.Carbs * entry.Qty) / 100f;
+                        osszZsir += (food.Fat * entry.Qty) / 100f;
+                    }
+                }
+            }
+
+            int napokSzama = meals.Select(m => m.Date.Date).Distinct().Count();
+            return new Macros
+            {
+                Protein = osszProt / napokSzama,
+                Carbs = osszCh / napokSzama,
+                Fat = osszZsir / napokSzama
+            };
+        }
     }
 }

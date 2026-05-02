@@ -31,6 +31,7 @@ namespace Teszt1
             builder.Services.AddScoped<IStepsDataProvider, StepsDataProvider>();
             builder.Services.AddScoped<IWeightDataProvider, WeightDataProvider>();
             builder.Services.AddScoped<IWorkoutDataProvider, WorkoutDataProvider>();
+            builder.Services.AddScoped<IWorkoutplanDataProvider, WorkoutplanDataProvider>();
             builder.Services.AddScoped<IWorkoutEntryDataProvider, WorkoutEntryDataProvider>();
             builder.Services.AddScoped<IMealDataProvider, MealDataProvider>();
             builder.Services.AddScoped<IMealEntryDataProvider, MealEntryDataProvider>();

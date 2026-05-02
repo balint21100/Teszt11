@@ -36,5 +36,6 @@ namespace Teszt1.Bakckend.Calsses
         public virtual ICollection<DailyLog> DailyLogs { get; set; } = new HashSet<DailyLog>();
         public virtual ICollection<Weight> Weights { get; set; }
         public virtual ICollection<Steps> Steps { get; set; }
+        public virtual ICollection<Workoutplan> Workoutplans { get; set; }
     }
 }

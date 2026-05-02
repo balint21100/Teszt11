@@ -1,16 +1,21 @@
-using System;
 using Microsoft.Maui.Controls;
+using System;
 
 namespace Teszt1.Frontend.Edzes;
 
 public partial class EdzesPage : ContentPage
 {
-    private readonly EdzesPageViewModel viewModel;
+    private readonly EdzesPageViewModel _viewModel;
     public EdzesPage(EdzesPageViewModel edzesPageViewModel)
     {
         InitializeComponent();
-        viewModel = edzesPageViewModel;
-        BindingContext = viewModel;
+        _viewModel = edzesPageViewModel;
+        BindingContext = _viewModel;
+    }
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        _viewModel.Load();
     }
     private async void OnEdzesKivalasztva(object sender, EventArgs e)
     {

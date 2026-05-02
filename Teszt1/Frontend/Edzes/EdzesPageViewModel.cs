@@ -12,7 +12,8 @@ namespace Teszt1.Frontend.Edzes
     {
 
         // Dinamikus listák a napokhoz
-        private readonly WorkoutService workoutService;
+        private readonly WorkoutService _workoutService;
+        private bool _isLoaded = false; // Flag a hibrid betöltéshez
 
         [ObservableProperty] private ObservableCollection<string> hetfoEdzesek = new() { "+ Új edzés hozzáadása" };
         [ObservableProperty] private ObservableCollection<string> keddEdzesek = new() { "+ Új edzés hozzáadása" };
@@ -40,9 +41,79 @@ namespace Teszt1.Frontend.Edzes
 
 
 
-        public EdzesPageViewModel()
+        public EdzesPageViewModel(WorkoutService workoutService)
         {
+            _workoutService = workoutService;
+            JeloldAktualisNapot();
+
+            // MESSENGER: Helyi frissítés, ha máshol módosul egy edzés
+            WeakReferenceMessenger.Default.Register<EdzesModositvaUzenet>(this, (r, m) =>
+            {
+                FrissitListatHelyben(m);
+            });
         }
+
+        public void Load()
+        {
+            // Ha már be van töltve, nem kérdezzük le újra az adatbázist
+            if (_isLoaded) return;
+
+            var hetiTervek = _workoutService.GetWorkoutPlans(1); // UserId fixen 1 egyelőre
+
+            var mindenLista = GetMindenNapiLista();
+            foreach (var lista in mindenLista)
+            {
+                lista.Clear();
+                lista.Add("+ Új edzés hozzáadása");
+                foreach (var terv in hetiTervek)
+                {
+                    lista.Add(terv);
+                }
+            }
+
+            _isLoaded = true;
+        }
+
+        private void FrissitListatHelyben(EdzesModositvaUzenet m)
+        {
+            var lista = GetListaNapAlapjan(m.Nap);
+            if (lista == null) return;
+
+            int index = lista.IndexOf(m.RegiNev);
+            if (index != -1)
+            {
+                if (m.UjNev == null) lista.RemoveAt(index); // Törlés
+                else lista[index] = m.UjNev; // Átnevezés
+            }
+        }
+
+        private List<ObservableCollection<string>> GetMindenNapiLista() =>
+            new() { HetfoEdzesek, KeddEdzesek, SzerdaEdzesek, CsutortokEdzesek, PentekEdzesek, SzombatEdzesek, VasarnapEdzesek };
+
+        private ObservableCollection<string> GetListaNapAlapjan(string nap) => nap switch
+        {
+            "Hétfő" => HetfoEdzesek,
+            "Kedd" => KeddEdzesek,
+            "Szerda" => SzerdaEdzesek,
+            "Csütörtök" => CsutortokEdzesek,
+            "Péntek" => PentekEdzesek,
+            "Szombat" => SzombatEdzesek,
+            "Vasárnap" => VasarnapEdzesek,
+            _ => null
+        };
+
+        private void JeloldAktualisNapot()
+        {
+            var maiNap = DateTime.Now.DayOfWeek;
+            if (maiNap == DayOfWeek.Monday) HetfoKeret = "HotPink";
+            else if (maiNap == DayOfWeek.Tuesday) KeddKeret = "HotPink";
+            else if (maiNap == DayOfWeek.Wednesday) SzerdaKeret = "HotPink";
+            else if (maiNap == DayOfWeek.Thursday) CsutortokKeret = "HotPink";
+            else if (maiNap == DayOfWeek.Friday) PentekKeret = "HotPink";
+            else if (maiNap == DayOfWeek.Saturday) SzombatKeret = "HotPink";
+            else if (maiNap == DayOfWeek.Sunday) VasarnapKeret = "HotPink";
+        }
+
         public string AktualisHet
         {
             get
@@ -55,86 +126,32 @@ namespace Teszt1.Frontend.Edzes
                 return $"{startOfWeek.ToString("yyyy. MMMM dd.", culture)} - {endOfWeek.ToString("yyyy. MMMM dd.", culture)}".ToLower();
             }
         }
+    
 
-        //public EdzesPageViewModel()
-        //{
-        //    var maiNap = DateTime.Now.DayOfWeek;
-        //    if (maiNap == DayOfWeek.Monday) HetfoKeret = "HotPink";
-        //    else if (maiNap == DayOfWeek.Tuesday) KeddKeret = "HotPink";
-        //    else if (maiNap == DayOfWeek.Wednesday) SzerdaKeret = "HotPink";
-        //    else if (maiNap == DayOfWeek.Thursday) CsutortokKeret = "HotPink";
-        //    else if (maiNap == DayOfWeek.Friday) PentekKeret = "HotPink";
-        //    else if (maiNap == DayOfWeek.Saturday) SzombatKeret = "HotPink";
-        //    else if (maiNap == DayOfWeek.Sunday) VasarnapKeret = "HotPink";
+    //// FÜGGVÉNY: Lekéri az összes napot a MySQL-ből
+    //private async Task BetoltMindenEdzestAsync()
+    //{
+    //    int userId = 1; // Ezt a te bejelentkezett felhasználódra kell cserélni később!
 
-        //    // --- ADATBÁZIS BETÖLTÉSE INDULÁSKOR ---
-        //    // Ez biztosítja, hogy elnavigálás után is megmaradjanak az adatok!
-        //    Task.Run(async () => await BetoltMindenEdzestAsync());
+    //    var hetfoLista = await _databaseService.GetNapiEdzesekAsync(userId, "Hétfő");
+    //    var keddLista = await _databaseService.GetNapiEdzesekAsync(userId, "Kedd");
+    //    var szerdaLista = await _databaseService.GetNapiEdzesekAsync(userId, "Szerda");
+    //    var csutortokLista = await _databaseService.GetNapiEdzesekAsync(userId, "Csütörtök");
+    //    var pentekLista = await _databaseService.GetNapiEdzesekAsync(userId, "Péntek");
+    //    var szombatLista = await _databaseService.GetNapiEdzesekAsync(userId, "Szombat");
+    //    var vasarnapLista = await _databaseService.GetNapiEdzesekAsync(userId, "Vasárnap");
 
-        //    WeakReferenceMessenger.Default.Register<EdzesMentveUzenet>(this, (r, m) =>
-        //    {
-        //        if (m.Nap == "Hétfő" && !HetfoEdzesek.Contains(m.EdzesNeve)) { HetfoEdzesek.Insert(HetfoEdzesek.Count - 1, m.EdzesNeve); KivalasztottHetfo = m.EdzesNeve; }
-        //        else if (m.Nap == "Kedd" && !KeddEdzesek.Contains(m.EdzesNeve)) { KeddEdzesek.Insert(KeddEdzesek.Count - 1, m.EdzesNeve); KivalasztottKedd = m.EdzesNeve; }
-        //        else if (m.Nap == "Szerda" && !SzerdaEdzesek.Contains(m.EdzesNeve)) { SzerdaEdzesek.Insert(SzerdaEdzesek.Count - 1, m.EdzesNeve); KivalasztottSzerda = m.EdzesNeve; }
-        //        else if (m.Nap == "Csütörtök" && !CsutortokEdzesek.Contains(m.EdzesNeve)) { CsutortokEdzesek.Insert(CsutortokEdzesek.Count - 1, m.EdzesNeve); KivalasztottCsutortok = m.EdzesNeve; }
-        //        else if (m.Nap == "Péntek" && !PentekEdzesek.Contains(m.EdzesNeve)) { PentekEdzesek.Insert(PentekEdzesek.Count - 1, m.EdzesNeve); KivalasztottPentek = m.EdzesNeve; }
-        //        else if (m.Nap == "Szombat" && !SzombatEdzesek.Contains(m.EdzesNeve)) { SzombatEdzesek.Insert(SzombatEdzesek.Count - 1, m.EdzesNeve); KivalasztottSzombat = m.EdzesNeve; }
-        //        else if (m.Nap == "Vasárnap" && !VasarnapEdzesek.Contains(m.EdzesNeve)) { VasarnapEdzesek.Insert(VasarnapEdzesek.Count - 1, m.EdzesNeve); KivalasztottVasarnap = m.EdzesNeve; }
-        //    });
+    //    MainThread.BeginInvokeOnMainThread(() =>
+    //    {
+    //        foreach (var e in hetfoLista) if (!HetfoEdzesek.Contains(e)) HetfoEdzesek.Insert(HetfoEdzesek.Count - 1, e);
+    //        foreach (var e in keddLista) if (!KeddEdzesek.Contains(e)) KeddEdzesek.Insert(KeddEdzesek.Count - 1, e);
+    //        foreach (var e in szerdaLista) if (!SzerdaEdzesek.Contains(e)) SzerdaEdzesek.Insert(SzerdaEdzesek.Count - 1, e);
+    //        foreach (var e in csutortokLista) if (!CsutortokEdzesek.Contains(e)) CsutortokEdzesek.Insert(CsutortokEdzesek.Count - 1, e);
+    //        foreach (var e in pentekLista) if (!PentekEdzesek.Contains(e)) PentekEdzesek.Insert(PentekEdzesek.Count - 1, e);
+    //        foreach (var e in szombatLista) if (!SzombatEdzesek.Contains(e)) SzombatEdzesek.Insert(SzombatEdzesek.Count - 1, e);
+    //        foreach (var e in vasarnapLista) if (!VasarnapEdzesek.Contains(e)) VasarnapEdzesek.Insert(VasarnapEdzesek.Count - 1, e);
+    //    });
+    //}
 
-        //    WeakReferenceMessenger.Default.Register<EdzesModositvaUzenet>(this, (r, m) =>
-        //    {
-        //        ObservableCollection<string> lista = null;
-        //        if (m.Nap == "Hétfő") lista = HetfoEdzesek;
-        //        else if (m.Nap == "Kedd") lista = KeddEdzesek;
-        //        else if (m.Nap == "Szerda") lista = SzerdaEdzesek;
-        //        else if (m.Nap == "Csütörtök") lista = CsutortokEdzesek;
-        //        else if (m.Nap == "Péntek") lista = PentekEdzesek;
-        //        else if (m.Nap == "Szombat") lista = SzombatEdzesek;
-        //        else if (m.Nap == "Vasárnap") lista = VasarnapEdzesek;
-
-        //        if (lista != null)
-        //        {
-        //            int index = lista.IndexOf(m.RegiNev);
-        //            if (index != -1)
-        //            {
-        //                if (m.UjNev == null)
-        //                {
-        //                    lista.RemoveAt(index);
-        //                }
-        //                else
-        //                {
-        //                    lista[index] = m.UjNev;
-        //                }
-        //            }
-        //        }
-        //    });
-        //}
-
-        //// FÜGGVÉNY: Lekéri az összes napot a MySQL-ből
-        //private async Task BetoltMindenEdzestAsync()
-        //{
-        //    int userId = 1; // Ezt a te bejelentkezett felhasználódra kell cserélni később!
-
-        //    var hetfoLista = await _databaseService.GetNapiEdzesekAsync(userId, "Hétfő");
-        //    var keddLista = await _databaseService.GetNapiEdzesekAsync(userId, "Kedd");
-        //    var szerdaLista = await _databaseService.GetNapiEdzesekAsync(userId, "Szerda");
-        //    var csutortokLista = await _databaseService.GetNapiEdzesekAsync(userId, "Csütörtök");
-        //    var pentekLista = await _databaseService.GetNapiEdzesekAsync(userId, "Péntek");
-        //    var szombatLista = await _databaseService.GetNapiEdzesekAsync(userId, "Szombat");
-        //    var vasarnapLista = await _databaseService.GetNapiEdzesekAsync(userId, "Vasárnap");
-
-        //    MainThread.BeginInvokeOnMainThread(() =>
-        //    {
-        //        foreach (var e in hetfoLista) if (!HetfoEdzesek.Contains(e)) HetfoEdzesek.Insert(HetfoEdzesek.Count - 1, e);
-        //        foreach (var e in keddLista) if (!KeddEdzesek.Contains(e)) KeddEdzesek.Insert(KeddEdzesek.Count - 1, e);
-        //        foreach (var e in szerdaLista) if (!SzerdaEdzesek.Contains(e)) SzerdaEdzesek.Insert(SzerdaEdzesek.Count - 1, e);
-        //        foreach (var e in csutortokLista) if (!CsutortokEdzesek.Contains(e)) CsutortokEdzesek.Insert(CsutortokEdzesek.Count - 1, e);
-        //        foreach (var e in pentekLista) if (!PentekEdzesek.Contains(e)) PentekEdzesek.Insert(PentekEdzesek.Count - 1, e);
-        //        foreach (var e in szombatLista) if (!SzombatEdzesek.Contains(e)) SzombatEdzesek.Insert(SzombatEdzesek.Count - 1, e);
-        //        foreach (var e in vasarnapLista) if (!VasarnapEdzesek.Contains(e)) VasarnapEdzesek.Insert(VasarnapEdzesek.Count - 1, e);
-        //    });
-        //}
-
-    }
+}
 }

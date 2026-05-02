@@ -13,15 +13,17 @@ namespace Teszt1.Bakckend.Services
     {
         private readonly IWorkoutDataProvider _workoutProvider;
         private readonly IWorkoutEntryDataProvider _entryProvider;
+        private readonly IWorkoutplanDataProvider _workoutplanProvider;
         private readonly IExerciseDataProvider _exerciseProvider;
 
-        public WorkoutService(IWorkoutDataProvider wp, IWorkoutEntryDataProvider ep, IExerciseDataProvider ex)
+        public WorkoutService(IWorkoutDataProvider wp, IWorkoutEntryDataProvider ep, IWorkoutplanDataProvider workoutplan, IExerciseDataProvider ex)
         {
             _workoutProvider = wp;
             _entryProvider = ep;
+            _workoutplanProvider = workoutplan;
             _exerciseProvider = ex;
         }
-        public void AddWorkoutWithEntries(int userId, string workoutName, List<WorkoutEntryDto> entries)
+        public void AddWorkoutWithEntries(int userId, string Plan, string description, List<WorkoutEntryDto> entries)
         {
             // 1. Fő edzés (WorkOut) létrehozása és mentése
             var newWorkout = new WorkOut
@@ -32,6 +34,17 @@ namespace Teszt1.Bakckend.Services
                 // ahhoz bővíteni kell a WorkOut.cs-t egy Name mezővel.
             };
             var savedWorkout = _workoutProvider.AddWorkout(newWorkout);
+
+            var workoutplan = _workoutplanProvider.GetWorkoutplans().FirstOrDefault(x => x.Name.Equals(Plan));
+            if (workoutplan == null)
+            {
+                workoutplan = _workoutplanProvider.AddWorkoutplan(new Workoutplan
+                {
+                    User_Id = userId,
+                    Name = Plan,
+                    Description = description
+                });
+            }
 
             // 2. Gyakorlatok mentése egyenként
             foreach (var item in entries)
@@ -46,7 +59,8 @@ namespace Teszt1.Bakckend.Services
                     exercise = _exerciseProvider.AddExercise(new Exercise
                     {
                         Name = item.ExerciseName,
-                        Category = "Súlyzós" // Alapértelmezett kategória
+
+                        Category = item.Weight != null? "Súlyzós" : "Egyéb" // Alapértelmezett kategória
                     });
                 }
 
@@ -54,6 +68,7 @@ namespace Teszt1.Bakckend.Services
                 var newEntry = new WorkoutEntry
                 {
                     Workout_id = savedWorkout.Id,
+                    Workoutplan_id = workoutplan.Id,
                     Exercise_id = exercise.Id,
                     Weight = item.Weight,
                     Reps = item.Reps,
@@ -64,6 +79,60 @@ namespace Teszt1.Bakckend.Services
             }
         }
 
+        public List<string> GetWorkoutPlans(int user_id)
+        {
+            List<string> workoutnames = new List<string>();
+            var workoutplans = _workoutplanProvider.GetWorkoutplans().Where(x => x.User_Id.Equals(user_id));
+            foreach (var item in workoutplans)
+            {
+                workoutnames.Add(item.Name);
+            }
+            return workoutnames;
+        }
+
+        public List<GrafikonAdatDto> GetEdzesStatisztika(int userId, int napokSzama)
+        {
+            var hatarido = DateTime.Now.AddDays(-napokSzama);
+            var edzesek = _workoutProvider.GetWorkouts(userId)
+                .Where(w => w.Date >= hatarido)
+                .ToList();
+
+            // Napok szerint csoportosítjuk és megszámoljuk az edzéseket
+            return edzesek
+                .GroupBy(w => w.Date.Date)
+                .Select(g => new GrafikonAdatDto
+                {
+                    Datum = g.Key,
+                    Ertek = g.Count(),
+                    Cimke = g.Key.ToString("MM.dd")
+                })
+                .OrderBy(x => x.Datum)
+                .ToList();
+        }
+
+        public List<TopListaElemDto> GetLegnehezebbGyakorlatok(int userId)
+        {
+            var workouts = _workoutProvider.GetWorkouts(userId);
+            var entries = new List<WorkoutEntry>();
+
+            foreach (var w in workouts)
+            {
+                entries.AddRange(_entryProvider.GetWorkoutEntries(w.Id));
+            }
+
+            return entries
+                .GroupBy(e => e.Exercise_id)
+                .Select(g => new TopListaElemDto
+                {
+                    Nev = _exerciseProvider.GetExercises().FirstOrDefault(ex => ex.Id == g.Key)?.Name ?? "Ismeretlen",
+                    MaxSuly = g.Max(e => e.Weight)
+                })
+                .OrderByDescending(x => x.MaxSuly)
+                .Take(5)
+                .ToList();
+        }
+
+
         //public ObservableCollection<string> GetNapiEdzesek(int userid)
         //{
         //    ObservableCollection<string> edzesek = new ObservableCollection<string>();
@@ -72,7 +141,7 @@ namespace Teszt1.Bakckend.Services
         //    {
         //        var edzesentry = _entryProvider.GetWorkoutEntries(edzes)
         //    }
-            
+
         //}
 
         //public void TeljesEdzesMentese(string gyNev, float suly, int reps, int sets, int userId)

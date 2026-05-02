@@ -36,6 +36,7 @@ namespace Teszt1.Frontend.Edzes
         [ObservableProperty] private string gyakorlatNeve;
         [ObservableProperty] private string suly;
         [ObservableProperty] private string ismetles;
+        [ObservableProperty] private string sulyMegjegyzes;
 
         // Egyéb edzés mezők
         [ObservableProperty] private string egyebTvekenysegNeve;
@@ -125,6 +126,7 @@ namespace Teszt1.Frontend.Edzes
             EgyebMegjegyzes = string.Empty;
         }
 
+        
         [RelayCommand]
         public async Task EdzesMentes()
         {
@@ -146,7 +148,7 @@ namespace Teszt1.Frontend.Edzes
                 int tempUserId = 1;
 
                 // Hívjuk a service-t a mentéshez
-                _workoutService.AddWorkoutWithEntries(tempUserId, EdzesNeve, _mentendoTetelek);
+                _workoutService.AddWorkoutWithEntries(tempUserId, EdzesNeve, sulyMegjegyzes,  _mentendoTetelek);
 
                 // Üzenet a főoldalnak
                 WeakReferenceMessenger.Default.Send(new EdzesMentveUzenet

@@ -17,6 +17,7 @@ namespace Teszt1.Bakckend.Database
         public DbSet<MealEntry> MealEntries { get; set; }
         public DbSet<WorkOut> Workouts { get; set; }
         public DbSet<WorkoutEntry> WorkoutEntries { get; set; }
+        public DbSet<Workoutplan> Workoutplans  { get; set; }
         public DbSet<Exercise> Exercises { get; set; }
         public DbSet<Badge> Badges { get; set; }
         public DbSet<UserBadge> UserBadges { get; set; }
@@ -54,6 +55,11 @@ namespace Teszt1.Bakckend.Database
                 .HasForeignKey(d => d.User_Id)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Workoutplan>()
+                .HasOne(w => w.User)
+                .WithMany(u => u.Workoutplans)
+                .HasForeignKey(w => w.User_Id)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // User -> Workout (1:N)
             modelBuilder.Entity<WorkOut>()
@@ -89,6 +95,7 @@ namespace Teszt1.Bakckend.Database
                 .WithMany(m => m.Entries)
                 .HasForeignKey(me => me.Meal_Id)
                 .OnDelete(DeleteBehavior.Cascade);
+
 
             // User -> Weight (1:N)
             modelBuilder.Entity<Weight>()

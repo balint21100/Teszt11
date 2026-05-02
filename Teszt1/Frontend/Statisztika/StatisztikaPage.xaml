@@ -3,12 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Teszt1.Frontend.Statisztika"
              x:Class="Teszt1.Frontend.Statisztika.StatisztikaPage"
+             x:DataType="local:StatisztikaPageViewModel"
              Title="Statisztika"
              BackgroundColor="Transparent">
 
-    <ContentPage.BindingContext>
-        <local:StatisztikaPageViewModel />
-    </ContentPage.BindingContext>
 
     <Grid>
         <Image Source="hatterkep.png" Aspect="AspectFill" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>

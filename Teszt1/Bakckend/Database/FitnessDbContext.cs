@@ -40,6 +40,7 @@ namespace Teszt1.Bakckend.Database
             modelBuilder.Entity<Exercise>(e => { e.ToTable("Dim_Exercise"); e.HasKey(x => x.Id); });
             modelBuilder.Entity<Badge>(e => { e.ToTable("Dim_Badge"); e.HasKey(x => x.Id); });
             modelBuilder.Entity<UserBadge>(e => { e.ToTable("Dim_UserBadge"); e.HasKey(x => x.Id); });
+            modelBuilder.Entity<Workoutplan>(e => { e.ToTable("Dim_Workoutplan"); e.HasKey(x => x.Id); });
             modelBuilder.Entity<DailyLog>(e => { e.ToTable("F_DailyLog"); e.HasKey(x => x.Id); });
             modelBuilder.Entity<Weight>(e => { e.ToTable("Dim_Weight"); e.HasKey(x => x.Id); });
             modelBuilder.Entity<Steps>(e => { e.ToTable("Dim_Steps"); e.HasKey(x => x.Id); });
@@ -52,6 +53,7 @@ namespace Teszt1.Bakckend.Database
                 .WithMany(u => u.DailyLogs)
                 .HasForeignKey(d => d.User_Id)
                 .OnDelete(DeleteBehavior.Cascade);
+
 
             // User -> Workout (1:N)
             modelBuilder.Entity<WorkOut>()
@@ -72,6 +74,13 @@ namespace Teszt1.Bakckend.Database
                 .HasOne(we => we.Workout)
                 .WithMany(w => w.Entries)
                 .HasForeignKey(we => we.Workout_id)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Workouplan -> WorjkoutEntr
+            modelBuilder.Entity<WorkoutEntry>()
+                .HasOne(d => d.Workoutplan)
+                .WithMany(u => u.WorkoutEntries)
+                .HasForeignKey(d => d.Workoutplan_id)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Meal -> MealEntry (1:N)

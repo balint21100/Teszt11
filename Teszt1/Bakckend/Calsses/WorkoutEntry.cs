@@ -14,6 +14,8 @@ namespace Teszt1.Bakckend.Calsses
         public int Id {  get; set; }
         [ForeignKey(nameof(Workout))]
         public int Workout_id { get; set; }
+        [ForeignKey(nameof(Workoutplan))]
+        public int Workoutplan_id { get; set; }
         [ForeignKey(nameof(Exercise))]
         public int Exercise_id { get; set; }
         public int Sets {  get; set; }
@@ -21,7 +23,9 @@ namespace Teszt1.Bakckend.Calsses
         public float Weight { get; set; }
 
 
+        public virtual Workoutplan Workoutplan { get; set; }
         public virtual Exercise Exercise { get; set; }
         public virtual WorkOut Workout { get; set; }
+        
     }
 }

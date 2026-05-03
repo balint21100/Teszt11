@@ -13,6 +13,7 @@ namespace Teszt1.Frontend.Edzes
 
         // Dinamikus listák a napokhoz
         private readonly WorkoutService _workoutService;
+        private readonly SessionService _sessionService;
         private bool _isLoaded = false; // Flag a hibrid betöltéshez
 
         [ObservableProperty] private ObservableCollection<string> hetfoEdzesek = new() { "+ Új edzés hozzáadása" };
@@ -41,9 +42,10 @@ namespace Teszt1.Frontend.Edzes
 
 
 
-        public EdzesPageViewModel(WorkoutService workoutService)
+        public EdzesPageViewModel(WorkoutService workoutService, SessionService session)
         {
             _workoutService = workoutService;
+            _sessionService = session;
             JeloldAktualisNapot();
 
             // MESSENGER: Helyi frissítés, ha máshol módosul egy edzés
@@ -58,7 +60,9 @@ namespace Teszt1.Frontend.Edzes
             // Ha már be van töltve, nem kérdezzük le újra az adatbázist
             if (_isLoaded) return;
 
-            var hetiTervek = _workoutService.GetWorkoutPlans(1); // UserId fixen 1 egyelőre
+            int userid = Convert.ToInt32(_sessionService.UserId);
+
+            var hetiTervek = _workoutService.GetWorkoutPlans(userid); // UserId fixen 1 egyelőre
 
             var mindenLista = GetMindenNapiLista();
             foreach (var lista in mindenLista)

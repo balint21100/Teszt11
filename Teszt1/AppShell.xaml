@@ -16,7 +16,7 @@
     ContentTemplate="{DataTemplate root:AuthPage}" Route="AuthPage" />
 
     <FlyoutItem Title="Étkezés">
-        <ShellContent ContentTemplate="{DataTemplate kaja:MainPage}" Route="MainPage" />
+        <ShellContent x:Name="MainPageT" ContentTemplate="{DataTemplate kaja:MainPage}" Route="MainPage" />
     </FlyoutItem>
 
     <FlyoutItem Title="Edzés">
@@ -37,6 +37,10 @@
 
     <FlyoutItem Title="Badge-ek">
         <ShellContent ContentTemplate="{DataTemplate badges:BadgePage}" Route="BadgePage"/>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Logout">
+        <ShellContent ContentTemplate="{DataTemplate root:AuthPage}" Route="AuthPage"/>
     </FlyoutItem>
 
 

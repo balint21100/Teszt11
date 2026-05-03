@@ -19,7 +19,7 @@ namespace Teszt1.Bakckend.Services
 
         public int Login(string email, string password)
         {
-            var data = _userDataProvider.GetUser().FirstOrDefault(x => x.Email.Equals(email));
+            var data = _userDataProvider.GetUser().FirstOrDefault(x => x.Email.Equals(email) && x.Password.Equals(password));
             if (data != null)
             {
                 if (data.Email.Equals(email) && data.Password.Equals(password))
@@ -31,9 +31,25 @@ namespace Teszt1.Bakckend.Services
             return -1;
         }
 
-        public void Register(User user)
+        public int GetUser(string email, string password)
         {
-            _userDataProvider.AddUser(user);
+            var data = _userDataProvider.GetUser().FirstOrDefault(x => x.Email.Equals(email) && x.Password.Equals(password));
+            if (data != null)
+            {
+                if (data.Email.Equals(email) && data.Password.Equals(password))
+                {
+                    return data.Id;
+                }
+            }
+            return -1;
+        }
+
+        
+
+        public User Register(User user)
+        {
+            return _userDataProvider.AddUser(user);
+            
         }
     }
 }

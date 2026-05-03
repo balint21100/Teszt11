@@ -42,6 +42,7 @@ namespace Teszt1
             // --- 3. SZOLGÁLTATÁSOK (SERVICES) ---
             builder.Services.AddScoped<MealService>();
             builder.Services.AddScoped<WorkoutService>();
+            builder.Services.AddScoped<SessionService>();
             builder.Services.AddScoped<RegLogService>();
 
 

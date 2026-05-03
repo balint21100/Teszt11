@@ -14,6 +14,7 @@ namespace Teszt1.Frontend
     public partial class EtkezesHozzaadasaPageViewModel : ObservableObject
     {
         private readonly MealService _mealService;
+        private readonly SessionService _sessionService;
 
         // Ezeket a változókat kötjük a beviteli mezőkhöz
         [ObservableProperty] private string mealName;
@@ -24,9 +25,10 @@ namespace Teszt1.Frontend
         // Ebbe a listába töltjük a keresés eredményét
         public ObservableCollection<Food> SearchResults { get; set; } = new ObservableCollection<Food>();
 
-        public EtkezesHozzaadasaPageViewModel(MealService mealService)
+        public EtkezesHozzaadasaPageViewModel(MealService mealService, SessionService session)
         {
             _mealService = mealService;
+            _sessionService = session;
         }
 
 
@@ -51,8 +53,9 @@ namespace Teszt1.Frontend
 
             if (float.TryParse(Quantity, out float qty))
             {
+                int user_id = Convert.ToInt32(_sessionService.UserId);
                 // Meghívjuk a service-t (itt a userId-t most fix 1-re írom, de később a bejelentkezett felhasználót használd)
-                _mealService.AddMealWithEntry(1, MealName, SelectedFood.Id, qty);
+                _mealService.AddMealWithEntry(user_id, MealName, SelectedFood.Id, qty);
 
                 await App.Current.MainPage.DisplayAlert("Siker", "Étkezés rögzítve!", "OK");
 

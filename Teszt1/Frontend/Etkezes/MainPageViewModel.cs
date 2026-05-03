@@ -14,6 +14,7 @@ namespace Teszt1.Frontend
     public partial class MainPageViewModel : ObservableObject
     {
         private readonly MealService _mealService;
+        private readonly SessionService _sessionService;
 
         // --- Kalória ---
         [ObservableProperty] private double calorieProgress;
@@ -35,16 +36,17 @@ namespace Teszt1.Frontend
         // Lista az utolsó étkezéseknek
         public ObservableCollection<string> RecentMeals { get; set; } = new ObservableCollection<string>();
 
-        public MainPageViewModel( MealService mealService)
+        public MainPageViewModel( MealService mealService, SessionService session)
         {
             _mealService = mealService;
+            _sessionService = session;
         }
 
         
         public void LoadData()
         {
             // 1. Felhasználó azonosítója (példaként 1, később a bejelentkezésből jön)
-            int userId = 1;
+            int userId = Convert.ToInt32(_sessionService.UserId);
 
             // 2. Makrók és kalóriák lekérése a Service-ből
             // Ez a metódus végzi el a matekot a FitnessDbContext adatai alapján

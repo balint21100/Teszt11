@@ -3,16 +3,19 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:frontend="clr-namespace:Teszt1.Frontend"
-    xmlns:root="clr-namespace:Teszt1"
+    xmlns:root="clr-namespace:Teszt1.Frontend.Authe"
     xmlns:edzes="clr-namespace:Teszt1.Frontend.Edzes"
     xmlns:stat="clr-namespace:Teszt1.Frontend.Statisztika"
+    xmlns:kaja="clr-namespace:Teszt1"
     xmlns:views="clr-namespace:Teszt1.Frontend.Authe"
     Shell.FlyoutBehavior="Flyout"
     Title="Teszt1">
 
+    <ShellContent
+    ContentTemplate="{DataTemplate root:AuthPage}" Route="AuthPage" />
 
     <FlyoutItem Title="Étkezés">
-        <ShellContent ContentTemplate="{DataTemplate root:MainPage}" Route="MainPage" />
+        <ShellContent ContentTemplate="{DataTemplate kaja:MainPage}" Route="MainPage" />
     </FlyoutItem>
 
     <FlyoutItem Title="Edzés">
@@ -31,9 +34,5 @@
         <ShellContent ContentTemplate="{DataTemplate stat:StatisztikaPage}" Route="StatisztikaPage" />
     </FlyoutItem>
     
-    <FlyoutItem Title="Login">
-    <ShellContent
-        ContentTemplate="{DataTemplate views:AuthPage}" Route="AuthPage" />
-    </FlyoutItem>
 
 </Shell>

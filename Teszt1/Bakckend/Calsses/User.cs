@@ -9,24 +9,16 @@ namespace Teszt1.Bakckend.Calsses
 {
     public class User
     {
-        int id;
-        string email;
-        string password;
-        string name;
-        int age;
-        string gender;
-        int activity_level;
-        int tdee;
 
         [Key]
-        public int Id { get => id; }
-        public string Email { get => email; }
-        public string Password { get => password;}
-        public string Name { get => name;}
-        public int Age { get => age;}
-        public string Gender { get => gender;}
-        public int Activity_level { get => activity_level;}
-        public int Tdee { get => tdee;}
+        public int Id { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
+        public string Name { get; set; }
+        public int Age { get; set; }
+        public string Gender { get; set; }
+        public int Activity_level { get; set; }
+        public int Tdee { get; set; }
 
 
         // Kapcsolatok (Navigation properties)

@@ -17,7 +17,7 @@
                     <Label Text="Egészségadatok" FontSize="28" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" Margin="0,0,0,10"/>
 
                     <Border WidthRequest="120" HeightRequest="120" StrokeShape="RoundRectangle 60" HorizontalOptions="Center" Stroke="#6200EE" StrokeThickness="3">
-                        <Image Source="dotnet_bot.png" Aspect="AspectFill" BackgroundColor="#333" />
+                        <Image Source="t.png" Aspect="AspectFill" BackgroundColor="#333" />
                     </Border>
 
                     <Frame BackgroundColor="#20FFFFFF" CornerRadius="15" Padding="15" BorderColor="Transparent" HasShadow="False">

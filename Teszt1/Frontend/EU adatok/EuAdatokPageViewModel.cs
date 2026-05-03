@@ -14,14 +14,14 @@ namespace Teszt1.Frontend
         [ObservableProperty] private string cel = "Fogyás";
         [ObservableProperty] private string kihivasProgressz = "5 / 28";
 
-        [ObservableProperty] private string magassag = "170";
+        [ObservableProperty] private string magassag = "162";
         [ObservableProperty] private string testsuly = "65";
         [ObservableProperty] private string vernyomas = "120/80";
 
-        [ObservableProperty] private int lepesszam = 4500;
+        [ObservableProperty] private int lepesszam = 4536;
         [ObservableProperty] private int lepesszamCel = 10000;
 
-        [ObservableProperty] private string egyebAdat = "Nincs";
+        [ObservableProperty] private string egyebAdat = "Glutén, laktóz és szója kerülése";
 
         [RelayCommand]
         public async Task MentesAsync()

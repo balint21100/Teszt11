@@ -7,6 +7,7 @@ using Teszt1.Bakckend.Database;
 using Teszt1.Frontend.Edzes;
 using Teszt1.Frontend.Authe;
 using Teszt1.Frontend.Statisztika;
+using Teszt1.Frontend.Badges;
 
 namespace Teszt1
 {
@@ -73,6 +74,9 @@ namespace Teszt1
 
             builder.Services.AddTransient<StatisztikaPage>();
             builder.Services.AddTransient<StatisztikaPageViewModel>();
+
+            builder.Services.AddTransient<BadgePage>();
+            builder.Services.AddTransient<BadgePageViewModel>();
 
 #if DEBUG
             builder.Logging.AddDebug();

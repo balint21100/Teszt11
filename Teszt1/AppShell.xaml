@@ -8,6 +8,7 @@
     xmlns:stat="clr-namespace:Teszt1.Frontend.Statisztika"
     xmlns:kaja="clr-namespace:Teszt1"
     xmlns:views="clr-namespace:Teszt1.Frontend.Authe"
+    xmlns:badges="clr-namespace:Teszt1.Frontend.Badges"
     Shell.FlyoutBehavior="Flyout"
     Title="Teszt1">
 
@@ -33,6 +34,10 @@
     <FlyoutItem Title="Statisztika">
         <ShellContent ContentTemplate="{DataTemplate stat:StatisztikaPage}" Route="StatisztikaPage" />
     </FlyoutItem>
-    
+
+    <FlyoutItem Title="Badge-ek">
+        <ShellContent ContentTemplate="{DataTemplate badges:BadgePage}" Route="BadgePage"/>
+    </FlyoutItem>
+
 
 </Shell>

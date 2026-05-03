@@ -71,7 +71,7 @@
 
                     <!-- Grafikon részleg -->
                     <Frame BackgroundColor="#20FFFFFF" CornerRadius="15" Padding="15">
-                        <VerticalStackLayout Spacing="10">
+                        <VerticalStackLayout Spacing="10" HorizontalOptions="CenterAndExpand">
                             <Label Text="{Binding AktualisCim}" TextColor="White" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"/>
 
                             <Grid ColumnDefinitions="40, *" HeightRequest="180">

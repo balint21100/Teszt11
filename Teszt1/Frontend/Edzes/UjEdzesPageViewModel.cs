@@ -22,6 +22,7 @@ namespace Teszt1.Frontend.Edzes
     public partial class UjEdzesPageViewModel : ObservableObject
     {
         private readonly WorkoutService _workoutService;
+        private readonly SessionService _sessionService;
 
         [ObservableProperty] private string kivalasztottNap;
         [ObservableProperty] private string edzesNeve;
@@ -48,13 +49,14 @@ namespace Teszt1.Frontend.Edzes
         [ObservableProperty] private string sulyemelesTabSzin = "#6200EE";
         [ObservableProperty] private string egyebTabSzin = "Transparent";
 
-        public UjEdzesPageViewModel(WorkoutService workoutService)
+        public UjEdzesPageViewModel(WorkoutService workoutService, SessionService session)
         {
             _workoutService = workoutService;
+            _sessionService = session;
         }
 
         // MAUI default konstruktor, ha a DI nincs beállítva (opcionális)
-        
+
 
         [RelayCommand]
         public void TabValtas(string tab)
@@ -126,7 +128,7 @@ namespace Teszt1.Frontend.Edzes
             EgyebMegjegyzes = string.Empty;
         }
 
-        
+
         [RelayCommand]
         public async Task EdzesMentes()
         {
@@ -145,10 +147,10 @@ namespace Teszt1.Frontend.Edzes
             try
             {
                 // TODO: Itt kérd le az aktuális bejelentkezett User Id-ját
-                int tempUserId = 1;
+                int tempUserId = Convert.ToInt32(_sessionService.UserId);
 
                 // Hívjuk a service-t a mentéshez
-                _workoutService.AddWorkoutWithEntries(tempUserId, EdzesNeve, sulyMegjegyzes,  _mentendoTetelek);
+                _workoutService.AddWorkoutWithEntries(tempUserId, EdzesNeve, sulyMegjegyzes, _mentendoTetelek);
 
                 // Üzenet a főoldalnak
                 WeakReferenceMessenger.Default.Send(new EdzesMentveUzenet

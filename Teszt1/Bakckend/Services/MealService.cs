@@ -169,13 +169,21 @@ namespace Teszt1.Bakckend.Services
             else if (tipus == "Eves")
             {
                 // Utolsó 12 hónap, havi bontásban
-                for (int i = 11; i >= 0; i--)
+                int aktualisEv = DateTime.Now.Year;
+
+                for (int honap = 1; honap <= 12; honap++)
                 {
-                    var honap = DateTime.Now.AddMonths(-i);
+                    // Kiszámoljuk az adott hónap összes kalóriáját
+                    float haviErtek = SzamolHaviKaloria(userId, aktualisEv, honap);
+
+                    // Létrehozunk egy dátumot csak azért, hogy a nevét (Jan, Feb...) megkapjuk
+                    DateTime honapDatum = new DateTime(aktualisEv, honap, 1);
+
                     result.Add(new GrafikonAdatDto
                     {
-                        Ertek = SzamolHaviKaloria(userId, honap.Year, honap.Month),
-                        Name = honap.ToString("MMM") // Jan, Feb, Márc...
+                        Ertek = haviErtek,
+                        Name = honapDatum.ToString("MMM"), // Jan, Feb, Már... felirat
+                        Datum = honapDatum
                     });
                 }
             }

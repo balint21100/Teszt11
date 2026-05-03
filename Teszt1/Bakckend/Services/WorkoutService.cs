@@ -140,7 +140,48 @@ namespace Teszt1.Bakckend.Services
                 .Take(5)
                 .ToList();
         }
+        public List<GrafikonAdatDto> GetEdzesVolumeStatisztika(int userId, string idotav)
+        {
+            DateTime kezdodatum = DateTime.Now;
 
+            // Időtáv beállítása
+            if (idotav == "Heti") kezdodatum = DateTime.Now.AddDays(-7);
+            else if (idotav == "Havi") kezdodatum = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            else if (idotav == "Éves") kezdodatum = new DateTime(DateTime.Now.Year, 1, 1);
+
+            // 1. Lekérjük az edzéseket az időszakban
+            var workouts = _workoutProvider.GetWorkouts(userId)
+                .Where(w => w.Date >= kezdodatum)
+                .ToList();
+
+            var ideiglenesLista = new List<WorkoutEntry>();
+            foreach (var w in workouts)
+            {
+                ideiglenesLista.AddRange(_entryProvider.GetWorkoutEntries(w.Id));
+            }
+
+            // 2. Csoportosítás gyakorlatok szerint és összsúly számítás
+            var statisztika = ideiglenesLista
+                .GroupBy(e => e.Exercise_id)
+                .Select(g => {
+                    var exercise = _exerciseProvider.GetExercises().FirstOrDefault(ex => ex.Id == g.Key);
+
+                    // Összsúly számítása: Súly * Ismétlés * Széria (ha valamelyik null, vegyük 1-nek vagy 0-nak)
+                    float osszSuly = g.Sum(e => e.Weight * e.Reps * e.Sets);
+
+                    return new GrafikonAdatDto
+                    {
+                        Name = exercise?.Name ?? "Ismeretlen",
+                        Ertek = osszSuly,
+                        Datum = kezdodatum // Itt most a név a fontosabb
+                    };
+                })
+                .OrderByDescending(x => x.Ertek) // A legtöbbet mozgatott legyen elöl
+                .Take(7) // Csak a top 7 gyakorlatot mutatjuk, hogy kiférjen a grafikonon
+                .ToList();
+
+            return statisztika;
+        }
 
         //public ObservableCollection<string> GetNapiEdzesek(int userid)
         //{

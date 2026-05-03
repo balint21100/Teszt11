@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Maui.Graphics;
 using System.Collections.ObjectModel;
+using Teszt1.Bakckend.Calsses;
 using Teszt1.Bakckend.Services;
 
 namespace Teszt1.Frontend.Statisztika
@@ -9,6 +10,7 @@ namespace Teszt1.Frontend.Statisztika
     public class GrafikonOszlop
     {
         public double Magassag { get; set; }
+        public double OszlopSz { get; set; }
         public string Cimke { get; set; }
         public Color Szin { get; set; }
     }
@@ -106,54 +108,51 @@ namespace Teszt1.Frontend.Statisztika
         [RelayCommand]
         public void FrissitsAdatokat(string mod)
         {
+
+
+
             Random rnd = new Random();
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                if (!IsEdzesAktiv) {
-                GrafikonOszlopok.Clear();
-                TopLista.Clear();
+                if (!IsEdzesAktiv)
+                {
+                    GrafikonOszlopok.Clear();
+                    TopLista.Clear();
 
-                var adatok = _mealService.GetStatisztika(int.Parse(_sessionService.UserId), mod);
+                    var adatok = _mealService.GetStatisztika(int.Parse(_sessionService.UserId), mod);
 
-                // Az adatokból kinyerjük a tömböket a grafikonrajzolóhoz
-                int[] ertekek = adatok.Select(x => (int)x.Ertek).ToArray();
-                string[] cimkek = adatok.Select(x => x.Name).ToArray();
+                    // Az adatokból kinyerjük a tömböket a grafikonrajzolóhoz
+                    int[] ertekek = adatok.Select(x => (int)x.Ertek).ToArray();
+                    string[] cimkek = adatok.Select(x => x.Name).ToArray();
 
-                Color alapSzin = IsEdzesAktiv ? Color.FromArgb("#00E676") : Color.FromArgb("#FF9800");
+                    Color alapSzin = IsEdzesAktiv ? Color.FromArgb("#00E676") : Color.FromArgb("#FF9800");
 
-                // Itt hívod meg a meglévő rajzolódat
-                RajzoldKiGrafikont(ertekek, cimkek, alapSzin);
+                    // Itt hívod meg a meglévő rajzolódat
+                    RajzoldKiGrafikont(ertekek, cimkek, alapSzin);
 
-                // Összesítők frissítése a lekrt adatok alapján
-                OsszesitoErtek1 = ertekek.Sum().ToString("N0") + " kcal";
+                    // Összesítők frissítése a lekrt adatok alapján
+                    OsszesitoErtek1 = ertekek.Sum().ToString("N0") + " kcal";
 
-                
+
                 }
                 else
                 {
-                    AktualisCim = "Gyakorlatok terhelése";
-                    OsszesitoCimke1 = "Összes súly";
-                    OsszesitoErtek1 = rnd.Next(40000, 100000).ToString("N0") + " kg";
-                    OsszesitoCimke2 = "Átlagos napi";
-                    OsszesitoErtek2 = rnd.Next(5000, 12000).ToString("N0") + " kg";
-                    TopListaCim = "Top 5 leggyakoribb gyakorlat";
 
-                    string[] gyakorlatok = { "Fekvenyomás", "Guggolás", "Felhúzás", "Evezés", "Bicepsz", "Tricepsz", "Kitörés" };
-                    var rendezettGyakorlatok = gyakorlatok.Select(g => new { Nev = g, Darab = rnd.Next(2, 25) })
-                                                          .OrderByDescending(x => x.Darab)
-                                                          .ToList();
+                    GrafikonOszlopok.Clear();
+                    TopLista.Clear();
+                    // EDZÉS LOGIKA
+                    var adatok = _workoutService.GetEdzesVolumeStatisztika(Convert.ToInt32(_sessionService.UserId), aktualisIdotav);
 
-                    for (int i = 0; i < Math.Min(5, rendezettGyakorlatok.Count); i++)
-                    {
-                        TopLista.Add(new TopListaElem
-                        {
-                            Helyezes = i + 1,
-                            Nev = rendezettGyakorlatok[i].Nev,
-                            ErtekSzoveg = $"{rendezettGyakorlatok[i].Darab} alkalommal"
-                        });
-                    }
-                    Color alapszin = Color.FromArgb("#6200EE");
-                    RajzoldKiGrafikont(new int[] { 80, 120, 150, 100, 90, 110, 70 }, new[] { "Fekv", "Gugg", "Felh", "Evez", "Bic", "Tri", "Váll" }, alapszin);
+                    AktualisCim = $"{aktualisIdotav} terhelés eloszlása";
+                    OsszesitoCimke1 = "Összes mozgatott súly";
+                    OsszesitoErtek1 = adatok.Sum(x => x.Ertek).ToString("N0") + " kg";
+
+                    // Grafikon kirajzolása
+                    int[] ertekek = adatok.Select(x => (int)x.Ertek).ToArray();
+                    string[] cimkek = adatok.Select(x => x.Name).ToArray();
+
+                    // Mivel a gyakorlatnevek hosszúak, az oszlopok legyenek szélesebbek
+                    RajzoldKiGrafikont(ertekek, cimkek, Color.FromArgb("#00E676"));
                 }
             });
         }
@@ -169,16 +168,33 @@ namespace Teszt1.Frontend.Statisztika
 
             double maxMegjelenithetoMagassag = 150;
             double szorzo = maxMegjelenithetoMagassag / maxErtek;
-
-            for (int i = 0; i < ertekek.Length; i++)
+            if (ertekek.Length > 24)
             {
-                GrafikonOszlopok.Add(new GrafikonOszlop
+                for (int i = 0; i < ertekek.Length; i++)
                 {
-                    Magassag = ertekek[i] * szorzo,
-                    Cimke = i < cimkek.Length ? cimkek[i] : (i + 1).ToString(),
-                    Szin = szin
-                });
+                    GrafikonOszlopok.Add(new GrafikonOszlop
+                    {
+                        Magassag = ertekek[i] * szorzo,
+                        OszlopSz = 20,
+                        Cimke = i < cimkek.Length ? cimkek[i] : (i + 1).ToString(),
+                        Szin = szin
+                    });
+                }
             }
+            else
+            {
+                for (int i = 0; i < ertekek.Length; i++)
+                {
+                    GrafikonOszlopok.Add(new GrafikonOszlop
+                    {
+                        Magassag = ertekek[i] * szorzo,
+                        OszlopSz = 30,
+                        Cimke = i < cimkek.Length ? cimkek[i] : (i + 1).ToString(),
+                        Szin = szin
+                    });
+                }
+            }
+
         }
     }
 }

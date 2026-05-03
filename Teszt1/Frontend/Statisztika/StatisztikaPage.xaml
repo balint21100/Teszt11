@@ -7,9 +7,6 @@
              Title="Statisztika"
              BackgroundColor="#121212">
 
-    <ContentPage.BindingContext>
-        <local:StatisztikaPageViewModel />
-    </ContentPage.BindingContext>
 
     <Grid>
         <Image Source="hatterkep.png" Aspect="AspectFill" Opacity="0.5"/>

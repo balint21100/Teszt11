@@ -1,7 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
 using Microsoft.Maui.Graphics;
+using System.Collections.ObjectModel;
+using Teszt1.Bakckend.Services;
 
 namespace Teszt1.Frontend.Statisztika
 {
@@ -26,9 +27,15 @@ namespace Teszt1.Frontend.Statisztika
 
     public partial class StatisztikaPageViewModel : ObservableObject
     {
-        public StatisztikaPageViewModel()
+        private readonly SessionService _sessionService;
+        private readonly MealService _mealService;
+        private readonly WorkoutService _workoutService;
+        public StatisztikaPageViewModel(SessionService session, MealService mealService, WorkoutService workoutService)
         {
-            FrissitsAdatokat();
+            _sessionService = session;
+            _mealService = mealService;
+            _workoutService = workoutService;
+            FrissitsAdatokat(aktualisIdotav);
         }
 
         [ObservableProperty] private bool isEdzesAktiv = true;
@@ -76,7 +83,7 @@ namespace Teszt1.Frontend.Statisztika
             IsEdzesAktiv = (tab == "Edzes");
             EdzesTabSzin = IsEdzesAktiv ? Color.FromArgb("#6200EE") : Colors.Transparent;
             EtkezesTabSzin = !IsEdzesAktiv ? Color.FromArgb("#6200EE") : Colors.Transparent;
-            FrissitsAdatokat();
+            FrissitsAdatokat(aktualisIdotav);
         }
 
         [RelayCommand]
@@ -93,45 +100,34 @@ namespace Teszt1.Frontend.Statisztika
                 case "Eves": EvesSzin = Color.FromArgb("#6200EE"); IsEvesLathato = true; break;
                 case "Egyeni": EgyeniSzin = Color.FromArgb("#6200EE"); IsEgyeniLathato = true; break;
             }
-            FrissitsAdatokat();
+            FrissitsAdatokat(aktualisIdotav);
         }
 
         [RelayCommand]
-        public void FrissitsAdatokat()
+        public void FrissitsAdatokat(string mod)
         {
+            Random rnd = new Random();
             MainThread.BeginInvokeOnMainThread(() =>
             {
+                if (!IsEdzesAktiv) {
                 GrafikonOszlopok.Clear();
                 TopLista.Clear();
 
-                var rnd = new Random();
+                var adatok = _mealService.GetStatisztika(int.Parse(_sessionService.UserId), mod);
+
+                // Az adatokból kinyerjük a tömböket a grafikonrajzolóhoz
+                int[] ertekek = adatok.Select(x => (int)x.Ertek).ToArray();
+                string[] cimkek = adatok.Select(x => x.Name).ToArray();
+
                 Color alapSzin = IsEdzesAktiv ? Color.FromArgb("#00E676") : Color.FromArgb("#FF9800");
 
-                if (!IsEdzesAktiv)
-                {
-                    AktualisCim = "Kalóriabevitel elemzés";
-                    OsszesitoCimke1 = "Összes bevitt kalória";
-                    OsszesitoErtek1 = rnd.Next(15000, 25000).ToString("N0") + " kcal";
-                    OsszesitoCimke2 = "Napi átlag kalória";
-                    OsszesitoErtek2 = rnd.Next(2000, 3500).ToString("N0") + " kcal";
-                    TopListaCim = "Top 5 leggyakoribb étel";
+                // Itt hívod meg a meglévő rajzolódat
+                RajzoldKiGrafikont(ertekek, cimkek, alapSzin);
 
-                    string[] etelek = { "Csirkemell", "Rizs", "Zabpehely", "Tojás", "Protein", "Banán", "Édesburgonya" };
-                    var rendezettEtelek = etelek.Select(e => new { Nev = e, Darab = rnd.Next(5, 45) })
-                                                .OrderByDescending(x => x.Darab)
-                                                .ToList();
+                // Összesítők frissítése a lekrt adatok alapján
+                OsszesitoErtek1 = ertekek.Sum().ToString("N0") + " kcal";
 
-                    for (int i = 0; i < Math.Min(5, rendezettEtelek.Count); i++)
-                    {
-                        TopLista.Add(new TopListaElem
-                        {
-                            Helyezes = i + 1,
-                            Nev = rendezettEtelek[i].Nev,
-                            ErtekSzoveg = $"{rendezettEtelek[i].Darab} alkalommal"
-                        });
-                    }
-
-                    RajzoldKiGrafikont(new int[] { 2100, 1850, 2400, 2200, 1900, 2600, 2150 }, new[] { "H", "K", "Sze", "Cs", "P", "Szo", "V" }, alapSzin);
+                
                 }
                 else
                 {
@@ -156,8 +152,8 @@ namespace Teszt1.Frontend.Statisztika
                             ErtekSzoveg = $"{rendezettGyakorlatok[i].Darab} alkalommal"
                         });
                     }
-
-                    RajzoldKiGrafikont(new int[] { 80, 120, 150, 100, 90, 110, 70 }, new[] { "Fekv", "Gugg", "Felh", "Evez", "Bic", "Tri", "Váll" }, alapSzin);
+                    Color alapszin = Color.FromArgb("#6200EE");
+                    RajzoldKiGrafikont(new int[] { 80, 120, 150, 100, 90, 110, 70 }, new[] { "Fekv", "Gugg", "Felh", "Evez", "Bic", "Tri", "Váll" }, alapszin);
                 }
             });
         }

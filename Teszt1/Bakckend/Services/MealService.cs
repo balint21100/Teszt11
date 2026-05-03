@@ -128,6 +128,111 @@ namespace Teszt1.Bakckend.Services
 
             return formattedList;
         }
+        public List<GrafikonAdatDto> GetStatisztika(int userId, string tipus)
+        {
+            var meals = mealDataProvider.GetMeals(userId);
+            var result = new List<GrafikonAdatDto>();
+
+            if (tipus == "Heti")
+            {
+                // Utolsó 7 nap, naponkénti bontás
+                var start = DateTime.Now.Date.AddDays(-6);
+                for (var d = start; d <= DateTime.Now.Date; d = d.AddDays(1))
+                {
+                    result.Add(new GrafikonAdatDto
+                    {
+                        Ertek = SzamolNapiKaloria(userId, d),
+                        Name = d.ToString("ddd") // H, K, Sze...
+                    });
+                }
+            }
+            else if (tipus == "Havi")
+            {
+                // Megszerezzük a jelenlegi dátumot
+                var most = DateTime.Now;
+                // Megtudjuk, hány napos a jelenlegi hónap (28, 29, 30 vagy 31)
+                int napokAHonapban = DateTime.DaysInMonth(most.Year, most.Month);
+
+                for (int nap = 1; nap <= napokAHonapban; nap++)
+                {
+                    DateTime aktualisNap = new DateTime(most.Year, most.Month, nap);
+
+                    result.Add(new GrafikonAdatDto
+                    {
+                        Ertek = SzamolNapiKaloria(userId, aktualisNap),
+                        // A Name lesz az, ami a grafikon alatt megjelenik
+                        // Csak minden 2. vagy 5. napot érdemes feliratozni, hogy ne érjenek össze a számok
+                        Name = nap % 2 == 0 ? nap.ToString() : ""
+                    });
+                }
+            }
+            else if (tipus == "Eves")
+            {
+                // Utolsó 12 hónap, havi bontásban
+                for (int i = 11; i >= 0; i--)
+                {
+                    var honap = DateTime.Now.AddMonths(-i);
+                    result.Add(new GrafikonAdatDto
+                    {
+                        Ertek = SzamolHaviKaloria(userId, honap.Year, honap.Month),
+                        Name = honap.ToString("MMM") // Jan, Feb, Márc...
+                    });
+                }
+            }
+            return result;
+        }
+
+        private float SzamolNapiKaloria(int userId, DateTime datum)
+        {
+            float napiOsszesKcal = 0;
+
+            // 1. Megkeressük az adott felhasználó adott napi étkezéseit
+            var napiMeals = mealDataProvider.GetMeals(userId)
+                .Where(m => m.Date.Date == datum.Date)
+                .ToList();
+
+            // 2. Végigmegyünk az étkezéseken (Reggeli, Ebéd, stb.)
+            foreach (var meal in napiMeals)
+            {
+                // 3. Lekérjük az étkezéshez tartozó ételeket (tételeket)
+                var entries = mealEntryDataProvider.GetMealEntries(meal.Id);
+
+                foreach (var entry in entries)
+                {
+                    // 4. Megkeressük az étel adatait a kalóriaérték miatt
+                    var food = foodDataProvider.GetFoods()
+                        .FirstOrDefault(f => f.Id == entry.Food_Id);
+
+                    if (food != null)
+                    {
+                        // Számolunk: (kalória / 100) * mennyiség
+                        napiOsszesKcal += (food.Kcal / 100f) * entry.Qty;
+                    }
+                }
+            }
+
+            return napiOsszesKcal;
+        }
+
+        private float SzamolHaviKaloria(int userId, int year, int month)
+        {
+            float haviOsszesen = 0;
+
+            // Megnézzük, hány nap van az adott hónapban (pl. február 28 vagy 29)
+            int napokSzama = DateTime.DaysInMonth(year, month);
+
+            // Végigmegyünk a hónap minden egyes napján
+            for (int nap = 1; nap <= napokSzama; nap++)
+            {
+                DateTime aktualisNap = new DateTime(year, month, nap);
+
+                // Meghívjuk a már megírt napi számolót és hozzáadjuk a havihoz
+                haviOsszesen += SzamolNapiKaloria(userId, aktualisNap);
+            }
+
+            return haviOsszesen;
+        }
+
 
         // MealService.cs - Add hozzá ezt
         public List<GrafikonAdatDto> GetKaloriaStatisztika(int userId, int napokSzama)

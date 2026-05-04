@@ -269,7 +269,35 @@ namespace Teszt1.Bakckend.Services
             }
             return result.OrderBy(x => x.Datum).ToList();
         }
+        public Dictionary<string, int> GetUserFoodFrequency(int userId)
+        {
+            // 1. Lekérjük a felhasználó összes étkezését
+            var userMeals = mealDataProvider.GetMeals(userId).ToList();
 
+            // 2. Összegyűjtjük az összes bejegyzést (MealEntry) ezekből az étkezésekből
+            var allEntries = new List<MealEntry>();
+            foreach (var meal in userMeals)
+            {
+                var entries = mealEntryDataProvider.GetMealEntries(meal.Id);
+                allEntries.AddRange(entries);
+            }
+
+            // 3. Lekérjük az összes ételt, hogy tudjuk a neveket
+            var allFoods = foodDataProvider.GetFoods();
+
+            // 4. LINQ segítségével csoportosítunk étel azonosító alapján és megszámoljuk az előfordulást
+            var frequency = allEntries
+                .GroupBy(e => e.Food_Id)
+                .Select(group => new
+                {
+                    FoodName = allFoods.FirstOrDefault(f => f.Id == group.Key)?.Name ?? "Ismeretlen étel",
+                    Count = group.Count()
+                })
+                .OrderByDescending(x => x.Count) // A leggyakrabban használtak lesznek elöl
+                .ToDictionary(x => x.FoodName, x => x.Count);
+
+            return frequency;
+        }
         public Macros GetAtlagosMakrok(int userId, int napok)
         {
             var hatarido = DateTime.Now.AddDays(-napok);

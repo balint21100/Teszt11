@@ -133,6 +133,20 @@ namespace Teszt1.Frontend.Statisztika
                     // Összesítők frissítése a lekrt adatok alapján
                     OsszesitoErtek1 = ertekek.Sum().ToString("N0") + " kcal";
 
+                    var rendezettEtelek = _mealService.GetUserFoodFrequency(int.Parse(_sessionService.UserId));
+                    int i = 0;
+                    foreach (var item in rendezettEtelek)
+                    {
+                        TopLista.Add(new TopListaElem
+                        {
+                            Helyezes = i + 1,
+                            Nev = item.Key,
+                            ErtekSzoveg = $"{item.Value} alkalommal"
+                        });
+                        i++;
+                    }
+                        
+                    
 
                 }
                 else

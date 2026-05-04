@@ -141,6 +141,35 @@ namespace Teszt1.Bakckend.Services
                 .Take(5)
                 .ToList();
         }
+        public Dictionary<string, int> GetUserExerciseFrequency(int userId)
+        {
+            // 1. Lekérjük a felhasználó összes edzését (WorkOut)
+            var userWorkouts = _workoutProvider.GetWorkouts(userId).ToList();
+
+            // 2. Összegyűjtjük az összes gyakorlat-bejegyzést (WorkoutEntry) ezekből az edzésekből
+            var allEntries = new List<WorkoutEntry>();
+            foreach (var workout in userWorkouts)
+            {
+                var entries = _entryProvider.GetWorkoutEntries(workout.Id);
+                allEntries.AddRange(entries);
+            }
+
+            // 3. Lekérjük az összes alapgyakorlatot a nevek párosításához
+            var allExercises = _exerciseProvider.GetExercises();
+
+            // 4. LINQ csoportosítás gyakorlat azonosító alapján és gyakoriság számolása
+            var frequency = allEntries
+                .GroupBy(e => e.Exercise_id)
+                .Select(group => new
+                {
+                    ExerciseName = allExercises.FirstOrDefault(ex => ex.Id == group.Key)?.Name ?? "Ismeretlen gyakorlat",
+                    Count = group.Count()
+                })
+                .OrderByDescending(x => x.Count) // A leggyakrabban végzettek lesznek elöl
+                .ToDictionary(x => x.ExerciseName, x => x.Count);
+
+            return frequency;
+        }
         public List<GrafikonAdatDto> GetEdzesVolumeStatisztika(int userId, string idotav)
         {
             DateTime kezdodatum = DateTime.Now;

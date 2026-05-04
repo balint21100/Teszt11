@@ -167,6 +167,18 @@ namespace Teszt1.Frontend.Statisztika
 
                     // Mivel a gyakorlatnevek hosszúak, az oszlopok legyenek szélesebbek
                     RajzoldKiGrafikont(ertekek, cimkek, Color.FromArgb("#00E676"));
+                    var rendezettWork = _workoutService.GetUserExerciseFrequency(int.Parse(_sessionService.UserId));
+                    int i = 0;
+                    foreach (var item in rendezettWork)
+                    {
+                        TopLista.Add(new TopListaElem
+                        {
+                            Helyezes = i + 1,
+                            Nev = item.Key,
+                            ErtekSzoveg = $"{item.Value} alkalommal"
+                        });
+                        i++;
+                    }
                 }
             });
         }

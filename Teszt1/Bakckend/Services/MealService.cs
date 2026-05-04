@@ -23,7 +23,7 @@ namespace Teszt1.Bakckend.Services
             this.userDataProvider = userDataProvider;
         }
 
-        
+
         public Macros GetTodayNutritionSummary(int userId)
         {
             var summary = new Macros();
@@ -300,6 +300,12 @@ namespace Teszt1.Bakckend.Services
                 Carbs = osszCh / napokSzama,
                 Fat = osszZsir / napokSzama
             };
+        }
+
+        public float GetUserTDEE(int userid)
+        {
+            var tdee = userDataProvider.GetUser().Where(x => userid == x.Id).Select(x => x.Tdee).FirstOrDefault();
+            return tdee;
         }
     }
 }

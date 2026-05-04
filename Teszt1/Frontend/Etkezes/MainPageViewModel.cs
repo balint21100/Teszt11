@@ -36,13 +36,13 @@ namespace Teszt1.Frontend
         // Lista az utolsó étkezéseknek
         public ObservableCollection<string> RecentMeals { get; set; } = new ObservableCollection<string>();
 
-        public MainPageViewModel( MealService mealService, SessionService session)
+        public MainPageViewModel(MealService mealService, SessionService session)
         {
             _mealService = mealService;
             _sessionService = session;
         }
 
-        
+
         public void LoadData()
         {
             // 1. Felhasználó azonosítója (példaként 1, később a bejelentkezésből jön)
@@ -53,10 +53,11 @@ namespace Teszt1.Frontend
             var summary = _mealService.GetTodayNutritionSummary(userId);
 
             // 3. Célértékek beállítása (Ezeket később érdemes a User táblából venni)
-            float goalKcal = 2000;
-            float goalCarbs = 250;
-            float goalProtein = 150;
-            float goalFat = 70;
+            var tdee = _mealService.GetUserTDEE(userId);
+            double goalKcal = tdee;
+            double goalCarbs = Math.Round(tdee * 0.3f / 4);
+            double goalProtein = Math.Round(tdee * 0.4f / 4);
+            double goalFat = Math.Round(tdee * 0.3f / 9);
 
             // 4. UI Változók frissítése (A ProgressBar-ok és Feliratok számára)
 

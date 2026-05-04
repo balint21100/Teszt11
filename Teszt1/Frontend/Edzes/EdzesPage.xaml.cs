@@ -17,6 +17,20 @@ public partial class EdzesPage : ContentPage
         base.OnAppearing();
         _viewModel.Load();
     }
+
+    private void OnShowPopupClicked(object sender, EventArgs e)
+    {
+        PopUpCha.IsVisible = true;
+        MyChallengePopup.IsVisible = true;
+    }
+
+    private void OnChallengeResponded(object sender, bool accepted)
+    {
+        if (accepted)
+        {
+            PopUpCha.IsVisible = false;
+        }
+    }
     private async void OnEdzesKivalasztva(object sender, EventArgs e)
     {
         var picker = (Picker)sender;

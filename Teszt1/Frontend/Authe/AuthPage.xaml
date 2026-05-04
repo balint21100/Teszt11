@@ -11,69 +11,71 @@
         <BoxView Color="#1e1e1e" VerticalOptions="Fill" HorizontalOptions="Fill"/>
 
         <ScrollView>
-        <VerticalStackLayout VerticalOptions="Center" Padding="30" Spacing="20">
+            <VerticalStackLayout VerticalOptions="Center" Padding="30" Spacing="20">
 
-            <Label Text="{Binding Title}" 
+                <Label Text="{Binding Title}" 
                    FontSize="32" 
                    TextColor="White" 
                    FontAttributes="Bold" 
                    HorizontalOptions="Center" 
                    Margin="0,0,0,20"/>
 
-            <Frame BackgroundColor="#2b2b2b" Padding="0" CornerRadius="10" BorderColor="Transparent"
+                <Frame BackgroundColor="#2b2b2b" Padding="0" CornerRadius="10" BorderColor="Transparent"
                    IsVisible="{Binding IsRegisterMode}">
-                <Entry Placeholder="Felhasználónév" 
+                    <Entry Placeholder="Felhasználónév" 
                        Text="{Binding Username}" 
                        PlaceholderColor="Gray" 
                        TextColor="White" 
                        Margin="15,0"/>
-            </Frame>
+                </Frame>
 
-            <Frame BackgroundColor="#2b2b2b" Padding="0" CornerRadius="10" BorderColor="Transparent">
-                <Entry Placeholder="Email cím" 
+                <Frame BackgroundColor="#2b2b2b" Padding="0" CornerRadius="10" BorderColor="Transparent">
+                    <Entry Placeholder="Email cím" 
                        Text="{Binding Email}" 
                        Keyboard="Email"
                        PlaceholderColor="Gray" 
                        TextColor="White" 
                        Margin="15,0"/>
-            </Frame>
+                </Frame>
 
-            <Frame BackgroundColor="#2b2b2b" Padding="0" CornerRadius="10" BorderColor="Transparent">
-                <Entry Placeholder="Jelszó" 
+                <Frame BackgroundColor="#2b2b2b" Padding="0" CornerRadius="10" BorderColor="Transparent">
+                    <Entry Placeholder="Jelszó" 
                        Text="{Binding Password}" 
                        IsPassword="True"
                        PlaceholderColor="Gray" 
                        TextColor="White" 
                        Margin="15,0"/>
-            </Frame>
+                </Frame>
 
-            <Label Text="Kor" TextColor="Gray" FontSize="12" Margin="5,0" IsVisible="{Binding IsRegisterMode}"/>
-            <Frame BackgroundColor="#2b2b2b" Padding="0" CornerRadius="10" IsVisible="{Binding IsRegisterMode}">
+                <Label Text="Kor" TextColor="Gray" FontSize="12" Margin="5,0" IsVisible="{Binding IsRegisterMode}"/>
+                <Frame BackgroundColor="#2b2b2b" Padding="0" CornerRadius="10" IsVisible="{Binding IsRegisterMode}">
                     <Entry Placeholder="Életkor" 
                Text="{Binding Age}" 
                Keyboard="Numeric"
                PlaceholderColor="Gray" TextColor="White" Margin="15,0"/>
                 </Frame>
-            <Label Text="Magasság" TextColor="Gray" FontSize="12" Margin="5,0" IsVisible="{Binding IsRegisterMode}"/>
-            <Frame BackgroundColor="#2b2b2b" Padding="0" CornerRadius="10" BorderColor="Transparent"
+                <Label Text="Magasság" TextColor="Gray" FontSize="12" Margin="5,0" IsVisible="{Binding IsRegisterMode}"/>
+                <Frame BackgroundColor="#2b2b2b" Padding="0" CornerRadius="10" BorderColor="Transparent"
        IsVisible="{Binding IsRegisterMode}">
                     <Entry Placeholder="Magasság" 
            Text="{Binding Height}" 
+           Keyboard="Numeric"
            PlaceholderColor="Gray" 
            TextColor="White" 
            Margin="15,0"/>
                 </Frame>
-            <Label Text="Súly" TextColor="Gray" FontSize="12" Margin="5,0" IsVisible="{Binding IsRegisterMode}"/>
-            <Frame BackgroundColor="#2b2b2b" Padding="0" CornerRadius="10" BorderColor="Transparent"
+                <Label Text="Súly" TextColor="Gray" FontSize="12" Margin="5,0" IsVisible="{Binding IsRegisterMode}"/>
+                <Frame BackgroundColor="#2b2b2b" Padding="0" CornerRadius="10" BorderColor="Transparent"
 IsVisible="{Binding IsRegisterMode}">
                     <Entry Placeholder="Súly" 
+                           Keyboard="Numeric"
     Text="{Binding Weight}" 
     PlaceholderColor="Gray" 
     TextColor="White" 
     Margin="15,0"/>
                 </Frame>
 
-            <Frame BackgroundColor="#2b2b2b" Padding="5" CornerRadius="10" IsVisible="{Binding IsRegisterMode}">
+                <Frame BackgroundColor="#2b2b2b" Padding="5" CornerRadius="10" IsVisible="{Binding IsRegisterMode}">
                     <Picker Title="Nem"
                 TitleColor="Gray"
                 TextColor="White"
@@ -81,17 +83,26 @@ IsVisible="{Binding IsRegisterMode}">
                 SelectedItem="{Binding Gender}"/>
                 </Frame>
 
-            <Label Text="Aktivitási szint:" TextColor="Gray" FontSize="12" Margin="5,0" IsVisible="{Binding IsRegisterMode}"/>
-            <Frame BackgroundColor="#2b2b2b" Padding="5" CornerRadius="10" IsVisible="{Binding IsRegisterMode}">
+                <Label Text="Aktivitási szint:" TextColor="Gray" FontSize="12" Margin="5,0" IsVisible="{Binding IsRegisterMode}"/>
+                <Frame BackgroundColor="#2b2b2b" Padding="5" CornerRadius="10" IsVisible="{Binding IsRegisterMode}">
                     <Picker Title="Válassz aktivitást"
                 TitleColor="Gray"
                 TextColor="White"
-                ItemsSource="{Binding ActivityLevels.Keys}"
-                SelectedIndex="0">
+                ItemsSource="{Binding activityLevels}"
+                SelectedIndex="{Binding ActivityLevel}">
+                    </Picker>
+                </Frame>
+                <Label Text="Aktivitási szint:" TextColor="Gray" FontSize="12" Margin="5,0" IsVisible="{Binding IsRegisterMode}"/>
+                <Frame BackgroundColor="#2b2b2b" Padding="5" CornerRadius="10" IsVisible="{Binding IsRegisterMode}">
+                    <Picker Title="Válassz aktivitást"
+                    TitleColor="Gray"
+                    TextColor="White"
+                    ItemsSource="{Binding Goal}"
+                    SelectedIndex="{Binding GoalChoice}">
                     </Picker>
                 </Frame>
 
-                <Label Text="{Binding Tdee, StringFormat='Becsült napi energiaigény: {0} kcal'}" 
+                <Label IsVisible="{Binding IsRegisterMode}" Text="{Binding Tdee, StringFormat='Becsült napi energiaigény: {0} kcal'}" 
            TextColor="#6200EE" 
            FontAttributes="Bold" 
            HorizontalOptions="Center"/>
@@ -105,15 +116,15 @@ IsVisible="{Binding IsRegisterMode}">
                     FontAttributes="Bold"
                     Margin="0,20,0,0"/>
 
-            <Button Text="{Binding SwitchText}" 
+                <Button Text="{Binding SwitchText}" 
                     Command="{Binding SwitchModeCommand}"
                     BackgroundColor="Transparent" 
                     TextColor="LightGray" 
                     FontSize="12"
                     TextTransform="None"/>
-            
 
-        </VerticalStackLayout>
+
+            </VerticalStackLayout>
         </ScrollView>
     </Grid>
 </ContentPage>

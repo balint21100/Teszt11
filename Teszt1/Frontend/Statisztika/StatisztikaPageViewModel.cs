@@ -159,6 +159,13 @@ namespace Teszt1.Frontend.Statisztika
 
         private void RajzoldKiGrafikont(int[] ertekek, string[] cimkek, Color szin)
         {
+            var mainDisplayInfo = DeviceDisplay.Current.MainDisplayInfo;
+
+            // Szélesség és magasság (pixel-független egységben)
+            double width = mainDisplayInfo.Width / mainDisplayInfo.Density;
+            double height = mainDisplayInfo.Height / mainDisplayInfo.Density;
+
+
             if (ertekek.Length == 0) return;
             double maxErtek = ertekek.Max();
             if (maxErtek == 0) maxErtek = 1;
@@ -168,32 +175,18 @@ namespace Teszt1.Frontend.Statisztika
 
             double maxMegjelenithetoMagassag = 150;
             double szorzo = maxMegjelenithetoMagassag / maxErtek;
-            if (ertekek.Length > 24)
+
+            for (int i = 0; i < ertekek.Length; i++)
             {
-                for (int i = 0; i < ertekek.Length; i++)
+                GrafikonOszlopok.Add(new GrafikonOszlop
                 {
-                    GrafikonOszlopok.Add(new GrafikonOszlop
-                    {
-                        Magassag = ertekek[i] * szorzo,
-                        OszlopSz = 20,
-                        Cimke = i < cimkek.Length ? cimkek[i] : (i + 1).ToString(),
-                        Szin = szin
-                    });
-                }
+                    Magassag = ertekek[i] * szorzo,
+                    OszlopSz = 30,
+                    Cimke = i < cimkek.Length ? cimkek[i] : (i + 1).ToString(),
+                    Szin = szin
+                });
             }
-            else
-            {
-                for (int i = 0; i < ertekek.Length; i++)
-                {
-                    GrafikonOszlopok.Add(new GrafikonOszlop
-                    {
-                        Magassag = ertekek[i] * szorzo,
-                        OszlopSz = 30,
-                        Cimke = i < cimkek.Length ? cimkek[i] : (i + 1).ToString(),
-                        Szin = szin
-                    });
-                }
-            }
+
 
         }
     }

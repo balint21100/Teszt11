@@ -146,7 +146,7 @@ namespace Teszt1.Bakckend.Database
             // user: XAMPP-nál alapértelmezetten 'root'
             // password: XAMPP-nál alapértelmezetten üres ("")
             // database: a phpMyAdmin-ban létrehozott adatbázis neve (fitness_db)
-            var connectionString = "server=localhost;user=root;password=;database=fittrck"; optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+            var connectionString = "server=192.168.0.15;user=root;password=;database=fittrck"; optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 
             // Ha telepítetted a Proxies csomagot, ez maradhat
             optionsBuilder.UseLazyLoadingProxies();

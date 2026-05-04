@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             BackgroundColor="#80000000" 
+             IsVisible="False"
+             x:Class="Teszt1.Frontend.Edzes.ChallengeView">
+    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Padding="20">
+        <Border BackgroundColor="White" StrokeShape="RoundRectangle 15" Padding="25" WidthRequest="300">
+            <VerticalStackLayout Spacing="15">
+                <Label Text="🔥 ÚJ KIHÍVÁS!" FontSize="22" FontAttributes="Bold" HorizontalTextAlignment="Center" />
+                <Label Text="100 fekvőtámasz ma estig. Benne vagy?" HorizontalTextAlignment="Center" />
+
+                <Button Text="ELFOGADOM" BackgroundColor="#E67E22" TextColor="White" Clicked="OnAcceptClicked" />
+                <Button Text="Kihagyom" BackgroundColor="Transparent" TextColor="Gray" Clicked="OnCloseClicked" />
+            </VerticalStackLayout>
+        </Border>
+    </VerticalStackLayout>
+</ContentView>

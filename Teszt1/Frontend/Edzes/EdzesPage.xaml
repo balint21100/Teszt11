@@ -10,7 +10,6 @@
 
     <Grid>
         <Image Source="hatterkep.png" Aspect="AspectFill" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>
-
         <Grid RowDefinitions="*" Padding="20">
             <ScrollView Grid.Row="0" Margin="0,0,0,10">
                 <Frame BackgroundColor="#B0000000" CornerRadius="20" Padding="20" BorderColor="Gray">
@@ -23,10 +22,10 @@
                         <Frame BackgroundColor="Transparent" Padding="5" BorderColor="{Binding HetfoKeret}" CornerRadius="10">
                             <Grid ColumnDefinitions="90, *, 45" ColumnSpacing="10" VerticalOptions="Center">
                                 <Label Grid.Column="0" Text="Hétfő" TextColor="White" FontAttributes="Bold" FontSize="18" VerticalOptions="Center"/>
-                                <Picker Grid.Column="1" ClassId="Hétfő" SelectedIndexChanged="OnEdzesKivalasztva" 
+                                <Picker Grid.Column="1" ClassId="Hétfő" SelectedIndexChanged="OnEdzesKivalasztva"
                                         ItemsSource="{Binding HetfoEdzesek}" SelectedItem="{Binding KivalasztottHetfo}" 
                                         Title="Válassz edzést..." TitleColor="LightGray" TextColor="White" VerticalOptions="Center" />
-                                <Button Grid.Column="2" Clicked="OnSzerkesztesKattintva" Text="⚙️" BackgroundColor="#6200EE" TextColor="White" CornerRadius="10" Padding="0" HeightRequest="45" VerticalOptions="Center"/>
+                                <Button Grid.Column="2" Clicked="OnShowPopupClicked" Text="⚙️" BackgroundColor="#6200EE" TextColor="White" CornerRadius="10" Padding="0" HeightRequest="45" VerticalOptions="Center"/>
                             </Grid>
                         </Frame>
                         <BoxView HeightRequest="1" Color="#40FFFFFF" Margin="0,5"/>
@@ -98,7 +97,21 @@
 
                     </VerticalStackLayout>
                 </Frame>
+                
             </ScrollView>
+            <Grid x:Name="PopUpCha" IsVisible="False" BackgroundColor="Transparent" >
+                <ScrollView>
+                    <VerticalStackLayout Padding="30" Spacing="25" BackgroundColor="Transparent">
+                        <Button Text="" Clicked="OnShowPopupClicked" BackgroundColor="Transparent"/>
+                    </VerticalStackLayout>
+                </ScrollView>
+
+                <local:ChallengeView x:Name="MyChallengePopup" 
+ChallengeResponded="OnChallengeResponded" />
+            </Grid>
         </Grid>
+
+    
+    
     </Grid>
 </ContentPage>

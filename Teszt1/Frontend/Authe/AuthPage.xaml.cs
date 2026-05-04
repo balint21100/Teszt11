@@ -13,4 +13,6 @@ public partial class AuthPage : ContentPage
     {
         base.OnAppearing();
     }
+
+    
 }

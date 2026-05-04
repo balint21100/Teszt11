@@ -16,7 +16,8 @@ namespace Teszt1.Bakckend.Services
         private readonly IWorkoutplanDataProvider _workoutplanProvider;
         private readonly IExerciseDataProvider _exerciseProvider;
 
-        public WorkoutService(IWorkoutDataProvider wp, IWorkoutEntryDataProvider ep, IWorkoutplanDataProvider workoutplan, IExerciseDataProvider ex)
+        public WorkoutService(IWorkoutDataProvider wp, IWorkoutEntryDataProvider ep, 
+            IWorkoutplanDataProvider workoutplan, IExerciseDataProvider ex)
         {
             _workoutProvider = wp;
             _entryProvider = ep;

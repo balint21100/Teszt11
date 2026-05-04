@@ -24,35 +24,77 @@ namespace Teszt1.Frontend.Authe
         [ObservableProperty] private string switchText = "Nincs még fiókod? Regisztrálj!";
         [ObservableProperty] private int age;
         [ObservableProperty] private string gender; // "Férfi" vagy "Nő"
-        [ObservableProperty] private double activityLevel = 1.2; // Alapértelmezett: ülő életmód
+        [ObservableProperty] private double activityLevel = 0; // Alapértelmezett: ülő életmód
+        [ObservableProperty] private double goalChoice = 1;
         [ObservableProperty] private double height;
         [ObservableProperty] private double weight;
         [ObservableProperty] private double tdee;
 
         public List<string> Genders => new List<string> { "Férfi", "Nő" };
-
-        public Dictionary<string, double> activityLevels => new Dictionary<string, double>
+        
+        public List<string> activityLevels => new List<string>
 {
-    { "Ülő életmód", 1.2 },
-    { "Enyhén aktív", 1.375 },
-    { "Mérsékelten aktív", 1.55 },
-    { "Nagyon aktív", 1.725 }
+    { "Ülő életmód"},
+    { "Enyhén aktív"},
+    { "Mérsékelten aktív"},
+    { "Nagyon aktív"}
 };
 
+        public List<string> Goal => new List<string> { {"Fogyás" }, { "Szintentartás" }, { "Tömegelés" } };
+
+        partial void OnAgeChanged(int value) => CalculateTDEE();
+        partial void OnHeightChanged(double value) => CalculateTDEE();
+        partial void OnWeightChanged(double value) => CalculateTDEE();
+        partial void OnGenderChanged(string value) => CalculateTDEE();
+        partial void OnActivityLevelChanged(double value) => CalculateTDEE();
+        partial void OnGoalChoiceChanged(double value) => CalculateTDEE();
+
+        
+
         // Egy metódus a TDEE kiszámításához (példa súllyal és magassággal kiegészítve)
-        private double CalculateTDEE(double weight, double height)
+        private double CalculateTDEE()
         {
             double bmr;
             if (Gender == "Férfi")
             {
-                bmr = (10 * weight) + (6.25 * height) - (5 * Age) + 5;
+                bmr = (10 * Weight) + (6.25 * Height) - (5 * Age) + 5;
             }
             else
             {
-                bmr = (10 * weight) + (6.25 * height) - (5 * Age) - 161;
+                bmr = (10 * Weight) + (6.25 * Height) - (5 * Age) - 161;
             }
-
-            Tdee = Math.Round(bmr * ActivityLevel);
+            double Choice = 0;
+            switch (goalChoice)
+            {
+                case 0: Choice = -300;
+                    break;
+                case 1: Choice = 0;
+                    break;
+                case 2: Choice = 300;
+                    break;
+                default: Choice = 0; 
+                    break;
+            }
+            double activity = 1.2;
+            switch (ActivityLevel)
+            {
+                case 0:
+                    activity = 1.2;
+                    break;
+                case 1:
+                    activity = 1.375;
+                    break;
+                case 2:
+                    activity = 1.55;
+                    break;
+                case 3:
+                    activity = 1.725;
+                    break;
+                default:
+                    activity = 1.2;
+                    break;
+            }
+            Tdee = Math.Round(bmr * activity) + Choice;
             return Tdee;
         }
 
@@ -87,13 +129,15 @@ namespace Teszt1.Frontend.Authe
 
                 if (IsRegisterMode && !string.IsNullOrEmpty(Email) && !string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(Password) && !string.IsNullOrEmpty(Gender) && weight != 0 && height != 0)
                 {
+                    double ertek = CalculateTDEE();
+                    
                     // Regisztrációs logika helye (pl. API hívás)
                     User user = new User
                     {
                         Email = Email,
                         Name = username,
                         Password = password,
-                        Tdee = Convert.ToInt32(tdee),
+                        Tdee = Convert.ToInt32(ertek),
                         Gender = Gender,
                         Age = Age,
                         Activity_level = Convert.ToInt32(activityLevel)

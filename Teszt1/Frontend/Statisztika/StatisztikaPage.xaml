@@ -83,11 +83,11 @@
 
                                 <!-- Oszlopok -->
                                 <ScrollView Grid.Column="1" Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
-                                    <HorizontalStackLayout BindableLayout.ItemsSource="{Binding GrafikonOszlopok}" Spacing="10" VerticalOptions="End" HeightRequest="180">
+                                    <HorizontalStackLayout BindableLayout.ItemsSource="{Binding GrafikonOszlopok}" HorizontalOptions="FillAndExpand" Spacing="10" VerticalOptions="End" HeightRequest="180">
                                         <BindableLayout.ItemTemplate>
                                             <DataTemplate x:DataType="local:GrafikonOszlop">
-                                                <VerticalStackLayout VerticalOptions="End" Spacing="5" WidthRequest="{Binding oszl}">
-                                                    <BoxView WidthRequest="20" HeightRequest="{Binding Magassag}" Color="{Binding Szin}" CornerRadius="4" HorizontalOptions="Center"/>
+                                                <VerticalStackLayout VerticalOptions="End" HorizontalOptions="FillAndExpand" Spacing="5" WidthRequest="{Binding oszl}">
+                                                    <BoxView WidthRequest="20" HeightRequest="{Binding Magassag}" Color="{Binding Szin}" CornerRadius="4" />
                                                     <Label Text="{Binding Cimke}" TextColor="White" FontSize="9" HorizontalOptions="Center"/>
                                                 </VerticalStackLayout>
                                             </DataTemplate>
